@@ -3,4 +3,6 @@
     <string name="app_name">VitesseApp</string>
 
     <string name="tab_item_all">Tous</string>
+
+    <string name="empty_image">Image vide</string>
 </resources>
