@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
@@ -28,7 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.vitesseapp.R
+import com.example.vitesseapp.data.local.CandidateEntity
 import com.example.vitesseapp.ui.theme.VitesseAppTheme
 
 @Composable
@@ -44,7 +48,12 @@ fun HomeScreen() {
 }
 
 @Composable
-fun HomeTabs(modifier: Modifier = Modifier) {
+fun HomeTabs(
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
+    val homeUiState by homeViewModel.uiState.collectAsStateWithLifecycle()
+
     var state by rememberSaveable { mutableIntStateOf(0) }
     val titles = listOf(stringResource(R.string.tab_item_all), "Tab 2")
     Column(
@@ -61,24 +70,37 @@ fun HomeTabs(modifier: Modifier = Modifier) {
             }
         }
         if (state == 0 ) {
-            CandidatesList()
+            when(homeUiState) {
+                is HomeUiState.Empty -> {}
+                is HomeUiState.Error -> {}
+                is HomeUiState.Success -> {
+                    CandidatesList(candidates = (homeUiState as HomeUiState.Success).candidates)
+                }
+                is HomeUiState.Loading -> {}
+            }
         }
     }
 }
 
 @Composable
-fun CandidatesList(modifier: Modifier = Modifier) {
+fun CandidatesList(
+    modifier: Modifier = Modifier,
+    candidates: List<CandidateEntity>
+) {
     LazyColumn(
         modifier = modifier,
     ) {
-        items(10) {
-            CandidateItem()
+        items(items = candidates, key = {it.id}) { candidate ->
+            CandidateItem(candidate = candidate)
         }
     }
 }
 
 @Composable
-fun CandidateItem(modifier: Modifier = Modifier) {
+fun CandidateItem(
+    modifier: Modifier = Modifier,
+    candidate: CandidateEntity
+) {
     Row(
         modifier = modifier.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -96,7 +118,7 @@ fun CandidateItem(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(start = 16.dp)
         ) {
             Text(
-                text = "Prénom" + " " + "NOM",
+                text = candidate.firstName + " " + candidate.lastName.uppercase(),
                 fontWeight = FontWeight.Medium
             )
             Text(
@@ -113,7 +135,9 @@ fun CandidateItem(modifier: Modifier = Modifier) {
 @Composable
 fun CandidateItemPreview() {
     VitesseAppTheme {
-        CandidateItem()
+        CandidateItem(
+            candidate = CandidateEntity("1", "John", "Doe")
+        )
     }
 }
 
