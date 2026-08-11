@@ -1,5 +1,7 @@
 package com.example.vitesseapp.ui.screens.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -34,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.vitesseapp.R
 import com.example.vitesseapp.data.local.CandidateEntity
 import com.example.vitesseapp.ui.theme.VitesseAppTheme
+import java.time.LocalDate
 
 @Composable
 fun HomeScreen() {
@@ -122,7 +125,7 @@ fun CandidateItem(
                 fontWeight = FontWeight.Medium
             )
             Text(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                text = candidate.notes,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall
@@ -131,21 +134,23 @@ fun CandidateItem(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun CandidateItemPreview() {
     VitesseAppTheme {
         CandidateItem(
-            candidate = CandidateEntity("1", "John", "Doe")
+            candidate = CandidateEntity(
+                id = "1",
+                firstName = "John",
+                lastName = "Doe",
+                phone = "+330606060606",
+                email = "johndoe@gmail.com",
+                dateOfBirth = LocalDate.of(2026, 7, 21),
+                photo = "",
+                salary = 100,
+                notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            )
         )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    VitesseAppTheme {
-        HomeScreen()
     }
 }
