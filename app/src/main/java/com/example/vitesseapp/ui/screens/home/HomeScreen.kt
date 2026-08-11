@@ -110,7 +110,7 @@ fun CandidateItem(
     ) {
         Image(
             painter = painterResource(R.drawable.ic_empty_image_24dp),
-            contentDescription = stringResource(R.string.empty_image),
+            contentDescription = stringResource(R.string.content_description_empty_image),
             modifier = Modifier
                 .width(56.dp)
                 .height(56.dp)
