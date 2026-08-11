@@ -1,11 +1,13 @@
 package com.example.vitesseapp.data.local
 
 import android.content.Context
+import androidx.room3.ColumnTypeConverters
 import androidx.room3.Database
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
 
 @Database(entities = [CandidateEntity::class], version = 1, exportSchema = false)
+@ColumnTypeConverters(DateConverter::class)
 abstract class CandidateDatabase : RoomDatabase() {
 
     abstract fun candidateDao(): CandidateDao
