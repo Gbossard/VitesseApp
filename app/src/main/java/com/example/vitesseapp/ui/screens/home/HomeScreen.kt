@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,6 +34,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.vitesseapp.R
 import com.example.vitesseapp.data.local.CandidateEntity
 import com.example.vitesseapp.ui.theme.VitesseAppTheme
@@ -108,15 +112,28 @@ fun CandidateItem(
         modifier = modifier.padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(R.drawable.ic_empty_image_24dp),
-            contentDescription = stringResource(R.string.content_description_empty_image),
-            modifier = Modifier
-                .width(56.dp)
-                .height(56.dp)
-                .background(Color.LightGray),
-            colorFilter = ColorFilter.tint(Color.Gray)
-        )
+        if (candidate.photo == null) {
+            Image(
+                painter = painterResource(R.drawable.ic_empty_image_24dp),
+                contentDescription = stringResource(R.string.content_description_empty_image),
+                modifier = Modifier
+                    .width(56.dp)
+                    .height(56.dp)
+                    .background(Color.LightGray),
+                colorFilter = ColorFilter.tint(Color.Gray)
+            )
+        } else {
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data(candidate.photo)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = stringResource(R.string.content_description_photo),
+                modifier = Modifier
+                    .width(56.dp)
+                    .height(56.dp)
+            )
+        }
         Column(
             modifier = Modifier.padding(start = 16.dp)
         ) {
@@ -147,7 +164,7 @@ fun CandidateItemPreview() {
                 phone = "+330606060606",
                 email = "johndoe@gmail.com",
                 dateOfBirth = LocalDate.of(2026, 7, 21),
-                photo = "",
+                photo = null,
                 salary = 100,
                 notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
             )
