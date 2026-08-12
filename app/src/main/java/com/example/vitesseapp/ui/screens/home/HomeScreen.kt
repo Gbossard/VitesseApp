@@ -4,8 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -79,7 +81,9 @@ fun HomeTabs(
         }
         if (state == 0 ) {
             when(homeUiState) {
-                is HomeUiState.Empty -> {}
+                is HomeUiState.Empty -> {
+                    EmptyContent()
+                }
                 is HomeUiState.Error -> {}
                 is HomeUiState.Success -> {
                     CandidatesList(candidates = (homeUiState as HomeUiState.Success).candidates)
@@ -154,6 +158,21 @@ fun CandidateItem(
     }
 }
 
+@Composable
+fun EmptyContent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = stringResource(R.string.empty_list_candidate),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
@@ -172,5 +191,13 @@ fun CandidateItemPreview() {
                 notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
             )
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun EmptyContentPreview() {
+    VitesseAppTheme {
+        EmptyContent()
     }
 }
