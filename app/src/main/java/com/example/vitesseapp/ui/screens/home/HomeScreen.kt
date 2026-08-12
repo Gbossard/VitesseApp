@@ -62,9 +62,12 @@ fun HomeTabs(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val homeUiState by homeViewModel.uiState.collectAsStateWithLifecycle()
-
     var state by rememberSaveable { mutableIntStateOf(0) }
+    val uiState by when (state) {
+        0 -> homeViewModel.candidatesUiState.collectAsStateWithLifecycle()
+        else -> homeViewModel.favoritesUiState.collectAsStateWithLifecycle()
+    }
+
     val titles = listOf(stringResource(R.string.tab_item_all), stringResource(R.string.tab_item_favorite))
     Column(
         modifier = modifier
@@ -79,18 +82,16 @@ fun HomeTabs(
                 )
             }
         }
-        if (state == 0 ) {
-            when(homeUiState) {
-                is HomeUiState.Empty -> {
-                    EmptyContent()
-                }
-                is HomeUiState.Error -> {}
-                is HomeUiState.Success -> {
-                    CandidatesList(candidates = (homeUiState as HomeUiState.Success).candidates)
-                }
-                is HomeUiState.Loading -> {
-                    LoadingContent()
-                }
+        when (uiState) {
+            is HomeUiState.Empty -> {
+                EmptyContent()
+            }
+            is HomeUiState.Error -> {}
+            is HomeUiState.Success -> {
+                CandidatesList(candidates = (uiState as HomeUiState.Success).candidates)
+            }
+            is HomeUiState.Loading -> {
+                LoadingContent()
             }
         }
     }
