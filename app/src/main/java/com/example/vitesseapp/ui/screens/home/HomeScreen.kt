@@ -39,6 +39,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.vitesseapp.R
 import com.example.vitesseapp.data.local.CandidateEntity
+import com.example.vitesseapp.ui.composable.LoadingContent
 import com.example.vitesseapp.ui.theme.VitesseAppTheme
 import java.time.LocalDate
 
@@ -83,7 +84,9 @@ fun HomeTabs(
                 is HomeUiState.Success -> {
                     CandidatesList(candidates = (homeUiState as HomeUiState.Success).candidates)
                 }
-                is HomeUiState.Loading -> {}
+                is HomeUiState.Loading -> {
+                    LoadingContent()
+                }
             }
         }
     }
