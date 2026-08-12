@@ -15,6 +15,6 @@ data class CandidateEntity(
     val dateOfBirth: LocalDate,
     val photo: String?,
     val salary: Int,
-    val notes: String
-
+    val notes: String,
+    val isFavorite: Boolean = false
 )
