@@ -7,10 +7,14 @@ import javax.inject.Inject
 
 interface CandidateRepository {
     fun getAllCandidates(): Flow<List<CandidateEntity>>
+
+    fun getAllFavorites(): Flow<List<CandidateEntity>>
 }
 
 class CandidateRepositoryImpl @Inject constructor(
     private val dao: CandidateDao
 ) : CandidateRepository {
     override fun getAllCandidates(): Flow<List<CandidateEntity>> = dao.getAllCandidates()
+
+    override fun getAllFavorites(): Flow<List<CandidateEntity>> = dao.getAllFavorites()
 }
