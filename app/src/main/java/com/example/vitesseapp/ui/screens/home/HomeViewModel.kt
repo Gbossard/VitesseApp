@@ -24,12 +24,30 @@ sealed interface HomeUiState {
 class HomeViewModel @Inject constructor(
     candidateRepository: CandidateRepository
 ): ViewModel() {
-    val uiState: StateFlow<HomeUiState> = candidateRepository.getAllCandidates()
+    val candidatesUiState: StateFlow<HomeUiState> = candidateRepository.getAllCandidates()
         .map { candidates ->
             if (candidates.isEmpty()) {
                 HomeUiState.Empty
             } else {
                 HomeUiState.Success(candidates)
+            }
+        }
+        .onStart { emit(HomeUiState.Loading) }
+        .catch {
+            emit(HomeUiState.Error)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = HomeUiState.Loading
+        )
+
+    val favoritesUiState: StateFlow<HomeUiState> = candidateRepository.getAllFavorites()
+        .map { favorites ->
+            if (favorites.isEmpty()) {
+                HomeUiState.Empty
+            } else {
+                HomeUiState.Success(favorites)
             }
         }
         .onStart { emit(HomeUiState.Loading) }
