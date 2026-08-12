@@ -65,7 +65,7 @@ fun HomeTabs(
     val homeUiState by homeViewModel.uiState.collectAsStateWithLifecycle()
 
     var state by rememberSaveable { mutableIntStateOf(0) }
-    val titles = listOf(stringResource(R.string.tab_item_all), "Tab 2")
+    val titles = listOf(stringResource(R.string.tab_item_all), stringResource(R.string.tab_item_favorite))
     Column(
         modifier = modifier
     ) {
