@@ -2,6 +2,7 @@
     <string name="app_name">VitesseApp</string>
 
     <string name="tab_item_all">All</string>
+    <string name="tab_item_favorite">Favorites</string>
 
     <string name="content_description_empty_image">Empty Image</string>
     <string name="content_description_photo">Photo of candidate</string>
