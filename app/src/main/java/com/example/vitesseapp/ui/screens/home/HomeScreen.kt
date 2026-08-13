@@ -13,14 +13,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.AppBarWithSearch
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,6 +37,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,18 +51,57 @@ import com.example.vitesseapp.R
 import com.example.vitesseapp.data.local.CandidateEntity
 import com.example.vitesseapp.ui.composable.LoadingContent
 import com.example.vitesseapp.ui.theme.VitesseAppTheme
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
 fun HomeScreen() {
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            HomeSearch()
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            // TODO search composable
             HomeTabs()
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeSearch(
+    modifier: Modifier = Modifier
+) {
+    val searchBarState = rememberSearchBarState()
+    val textFieldState = rememberTextFieldState()
+    val scope = rememberCoroutineScope()
+    val inputField =
+        @Composable {
+            SearchBarDefaults.InputField(
+                textFieldState = textFieldState,
+                searchBarState = searchBarState,
+                onSearch = { scope.launch { searchBarState.animateToCollapsed() } },
+                placeholder = {
+                    Text(
+                        modifier = Modifier.clearAndSetSemantics {},
+                        text = stringResource(R.string.search_bar)
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_search_24dp),
+                        contentDescription = stringResource(R.string.search_bar)
+                    )
+                },
+            )
+        }
+    AppBarWithSearch(
+        state = searchBarState,
+        inputField = inputField,
+        modifier = modifier,
+    )
 }
 
 @Composable
@@ -200,5 +247,13 @@ fun CandidateItemPreview() {
 private fun EmptyContentPreview() {
     VitesseAppTheme {
         EmptyContent()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeSearchPreview() {
+    VitesseAppTheme {
+        HomeSearch()
     }
 }
