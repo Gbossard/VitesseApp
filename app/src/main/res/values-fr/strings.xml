@@ -5,6 +5,8 @@
     <string name="tab_item_all">Tous</string>
     <string name="tab_item_favorite">Favoris</string>
 
+    <string name="search_bar">Rechercher un candidat</string>
+
     <string name="content_description_empty_image">Image vide</string>
     <string name="content_description_photo">Photo du candidat</string>
 
