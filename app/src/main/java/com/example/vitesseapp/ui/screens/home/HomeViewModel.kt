@@ -5,13 +5,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.vitesseapp.data.local.CandidateEntity
 import com.example.vitesseapp.data.repository.CandidateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 sealed interface HomeUiState {
     data class Success(val candidates: List<CandidateEntity>): HomeUiState
@@ -24,7 +31,13 @@ sealed interface HomeUiState {
 class HomeViewModel @Inject constructor(
     candidateRepository: CandidateRepository
 ): ViewModel() {
-    val candidatesUiState: StateFlow<HomeUiState> = candidateRepository.getAllCandidates()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    val candidatesUiState: StateFlow<HomeUiState> = _searchQuery
+        .debounce(300.milliseconds)
+        .flatMapLatest { query -> candidateRepository.getAllCandidates(query = query) }
         .map { candidates ->
             if (candidates.isEmpty()) {
                 HomeUiState.Empty
@@ -59,4 +72,12 @@ class HomeViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = HomeUiState.Loading
         )
+
+    fun onClearQuery() {
+        _searchQuery.value = ""
+    }
+
+    fun onQueryChange(newQuery: String) {
+        _searchQuery.value = newQuery
+    }
 }
