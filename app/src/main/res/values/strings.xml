@@ -5,6 +5,7 @@
     <string name="tab_item_favorite">Favorites</string>
 
     <string name="search_bar">Search</string>
+    <string name="search_bar_delete_query">Delete the query</string>
 
     <string name="content_description_empty_image">Empty Image</string>
     <string name="content_description_photo">Photo of candidate</string>
