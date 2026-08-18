@@ -8,7 +8,7 @@ import javax.inject.Inject
 interface CandidateRepository {
     fun getAllCandidates(query: String): Flow<List<CandidateEntity>>
 
-    fun getAllFavorites(): Flow<List<CandidateEntity>>
+    fun getAllFavorites(query: String): Flow<List<CandidateEntity>>
 }
 
 class CandidateRepositoryImpl @Inject constructor(
@@ -16,5 +16,5 @@ class CandidateRepositoryImpl @Inject constructor(
 ) : CandidateRepository {
     override fun getAllCandidates(query: String): Flow<List<CandidateEntity>> = dao.getAllCandidates(query)
 
-    override fun getAllFavorites(): Flow<List<CandidateEntity>> = dao.getAllFavorites()
+    override fun getAllFavorites(query: String): Flow<List<CandidateEntity>> = dao.getAllFavorites(query)
 }
