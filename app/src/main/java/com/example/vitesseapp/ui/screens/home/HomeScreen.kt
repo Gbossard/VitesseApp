@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
@@ -25,11 +27,13 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,16 +59,25 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
-            HomeSearch()
+            HomeSearch(
+                onClearQuery = viewModel::onClearQuery,
+                onQueryChange = viewModel::onQueryChange,
+                query = searchQuery
+            )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            HomeTabs()
+            HomeTabs(
+                homeViewModel = viewModel
+            )
         }
     }
 }
@@ -72,11 +85,21 @@ fun HomeScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeSearch(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onClearQuery: () -> Unit
 ) {
     val searchBarState = rememberSearchBarState()
-    val textFieldState = rememberTextFieldState()
+    val textFieldState = rememberTextFieldState(initialText = query)
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(textFieldState) {
+        snapshotFlow { textFieldState.text }
+            .collect { newQuery ->
+                onQueryChange(newQuery.toString())
+            }
+    }
     val inputField =
         @Composable {
             SearchBarDefaults.InputField(
@@ -90,10 +113,22 @@ fun HomeSearch(
                     )
                 },
                 trailingIcon = {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_search_24dp),
-                        contentDescription = stringResource(R.string.search_bar)
-                    )
+                    if (textFieldState.text.isNotEmpty()) {
+                        IconButton(onClick = {
+                            textFieldState.clearText()
+                            onClearQuery()
+                        }) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_close_24dp),
+                                contentDescription = stringResource(R.string.search_bar_delete_query)
+                            )
+                        }
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_search_24dp),
+                            contentDescription = stringResource(R.string.search_bar)
+                        )
+                    }
                 },
             )
         }
@@ -107,7 +142,7 @@ fun HomeSearch(
 @Composable
 fun HomeTabs(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel
 ) {
     var state by rememberSaveable { mutableIntStateOf(0) }
     val uiState by when (state) {
@@ -254,6 +289,10 @@ private fun EmptyContentPreview() {
 @Composable
 private fun HomeSearchPreview() {
     VitesseAppTheme {
-        HomeSearch()
+        HomeSearch(
+            onClearQuery = {},
+            onQueryChange = {},
+            query = ""
+        )
     }
 }
