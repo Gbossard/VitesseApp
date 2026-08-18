@@ -55,7 +55,10 @@ class HomeViewModel @Inject constructor(
             initialValue = HomeUiState.Loading
         )
 
-    val favoritesUiState: StateFlow<HomeUiState> = candidateRepository.getAllFavorites()
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val favoritesUiState: StateFlow<HomeUiState> = _searchQuery
+        .debounce(300.milliseconds)
+        .flatMapLatest { query -> candidateRepository.getAllFavorites(query = query) }
         .map { favorites ->
             if (favorites.isEmpty()) {
                 HomeUiState.Empty
