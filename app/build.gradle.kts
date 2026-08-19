@@ -53,6 +53,7 @@ dependencies {
 
     // Room
     implementation(libs.androidx.room3.runtime)
+    implementation(libs.androidx.sqlite.bundled)
     ksp(libs.androidx.room3.compiler)
 
     // Hilt
