@@ -17,6 +17,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -60,6 +61,7 @@ import java.time.LocalDate
 
 @Composable
 fun HomeScreen(
+    onFabClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -70,6 +72,14 @@ fun HomeScreen(
                 onQueryChange = viewModel::onQueryChange,
                 query = searchQuery
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onFabClick) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_add_24dp),
+                    contentDescription = stringResource(R.string.add_candidate)
+                )
+            }
         }
     ) { innerPadding ->
         Column(
