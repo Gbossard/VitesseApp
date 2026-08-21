@@ -11,4 +11,6 @@
     <string name="content_description_photo">Photo of candidate</string>
 
     <string name="empty_list_candidate">No candidate</string>
+
+    <string name="add_candidate">Add a candidate</string>
 </resources>
