@@ -11,6 +11,7 @@
     <string name="form_first_name">First name</string>
     <string name="form_last_name">Last name</string>
     <string name="form_phone_number">Phone</string>
+    <string name="form_email">Email</string>
 
     <string name="content_description_delete_query">Delete the query</string>
     <string name="content_description_empty_image">Empty Image</string>
@@ -18,4 +19,5 @@
     <string name="content_description_back">Go back</string>
     <string name="content_description_person_name">Person\'s name</string>
     <string name="content_description_phone_number">Phone number</string>
+    <string name="content_description_email">Email address</string>
 </resources>
