@@ -130,7 +130,7 @@ fun HomeSearch(
                         }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_close_24dp),
-                                contentDescription = stringResource(R.string.search_bar_delete_query)
+                                contentDescription = stringResource(R.string.content_description_delete_query)
                             )
                         }
                     } else {
