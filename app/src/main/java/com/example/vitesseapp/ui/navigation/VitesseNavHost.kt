@@ -19,7 +19,11 @@ fun VitesseNavHost() {
             )
         }
         composable<AddCandidate> {
-            AddCandidateScreen()
+            AddCandidateScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
         }
     }
 }
