@@ -12,4 +12,6 @@
     <string name="content_description_photo">Photo du candidat</string>
 
     <string name="empty_list_candidate">Aucun candidat</string>
+
+    <string name="add_candidate">Ajouter un candidat</string>
 </resources>
