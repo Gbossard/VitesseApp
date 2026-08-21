@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -22,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.vitesseapp.R
@@ -42,6 +45,13 @@ fun AddCandidateScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             NameSection()
+            InformationSection(
+                painterRes = R.drawable.ic_call_24dp,
+                painterDescription = R.string.content_description_phone_number,
+                label = R.string.form_phone_number,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                state = rememberTextFieldState()
+            )
         }
     }
 }
@@ -76,6 +86,36 @@ fun NameSection(modifier: Modifier = Modifier) {
                 label = { Text(stringResource(R.string.form_last_name)) }
             )
         }
+    }
+}
+
+@Composable
+fun InformationSection(
+    modifier: Modifier = Modifier,
+    painterRes: Int,
+    painterDescription: Int,
+    label: Int,
+    keyboardOptions: KeyboardOptions,
+    state: TextFieldState
+) {
+    Row(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Icon(
+            modifier = Modifier.padding(top = 8.dp, end = 16.dp),
+            painter = painterResource(painterRes),
+            contentDescription = stringResource(painterDescription)
+        )
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            state = state,
+            keyboardOptions = keyboardOptions,
+            label = { Text(stringResource(label)) }
+        )
     }
 }
 
