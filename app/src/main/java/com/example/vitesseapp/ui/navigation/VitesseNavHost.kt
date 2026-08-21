@@ -12,7 +12,11 @@ fun VitesseNavHost() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Home) {
         composable<Home> {
-            HomeScreen()
+            HomeScreen(
+                onFabClick = {
+                    navController.navigate(AddCandidate)
+                }
+            )
         }
         composable<AddCandidate> {
             AddCandidateScreen()
