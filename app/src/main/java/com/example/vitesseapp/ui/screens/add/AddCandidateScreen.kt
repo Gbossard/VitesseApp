@@ -52,6 +52,13 @@ fun AddCandidateScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 state = rememberTextFieldState()
             )
+            InformationSection(
+                painterRes = R.drawable.ic_mail_24dp,
+                painterDescription = R.string.content_description_email,
+                label = R.string.form_email,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                state = rememberTextFieldState()
+            )
         }
     }
 }
