@@ -23,6 +23,7 @@
     <string name="content_description_person_name">Nom de la personne</string>
     <string name="content_description_phone_number">Numéro de téléphone</string>
     <string name="content_description_email">Adresse email</string>
+    <string name="content_description_date_of_birth">Date de naissance</string>
     <string name="content_description_salary">Salaire</string>
     <string name="content_description_notes">Notes à propos du candidat</string>
 </resources>
