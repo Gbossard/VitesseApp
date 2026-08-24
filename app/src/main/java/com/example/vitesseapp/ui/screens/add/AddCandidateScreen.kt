@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,9 +22,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -59,6 +64,7 @@ fun AddCandidateScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 state = rememberTextFieldState()
             )
+            DateSection()
             InformationSection(
                 painterRes = R.drawable.ic_attach_money_24dp,
                 painterDescription = R.string.content_description_salary,
@@ -141,6 +147,31 @@ fun InformationSection(
             label = { Text(stringResource(label)) }
         )
     }
+}
+
+@Composable
+fun DateSection(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Icon(
+            modifier = Modifier.padding(top = 8.dp, end = 16.dp),
+            painter = painterResource(R.drawable.ic_cake_24dp),
+            contentDescription = stringResource(R.string.content_description_date_of_birth)
+        )
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            val state = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
+            DatePicker(state = state, modifier = Modifier.clip(shape = RoundedCornerShape(32.dp)))
+        }
+    }
+
 }
 
 @Composable
