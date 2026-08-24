@@ -13,6 +13,7 @@
     <string name="form_phone_number">Phone</string>
     <string name="form_email">Email</string>
     <string name="form_salary">Expected salary</string>
+    <string name="form_notes">Notes</string>
 
     <string name="content_description_delete_query">Delete the query</string>
     <string name="content_description_empty_image">Empty Image</string>
@@ -22,4 +23,5 @@
     <string name="content_description_phone_number">Phone number</string>
     <string name="content_description_email">Email address</string>
     <string name="content_description_salary">Salary</string>
+    <string name="content_description_notes">Notes about the candidate</string>
 </resources>

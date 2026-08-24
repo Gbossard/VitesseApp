@@ -14,6 +14,7 @@
     <string name="form_phone_number">Téléphone</string>
     <string name="form_email">Email</string>
     <string name="form_salary">Prétentions salariales</string>
+    <string name="form_notes">Notes</string>
 
     <string name="content_description_delete_query">Supprimer la recherche</string>
     <string name="content_description_empty_image">Image vide</string>
@@ -23,4 +24,5 @@
     <string name="content_description_phone_number">Numéro de téléphone</string>
     <string name="content_description_email">Adresse email</string>
     <string name="content_description_salary">Salaire</string>
+    <string name="content_description_notes">Notes à propos du candidat</string>
 </resources>
