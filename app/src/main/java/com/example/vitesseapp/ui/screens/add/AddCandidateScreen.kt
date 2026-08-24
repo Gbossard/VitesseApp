@@ -59,6 +59,13 @@ fun AddCandidateScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 state = rememberTextFieldState()
             )
+            InformationSection(
+                painterRes = R.drawable.ic_attach_money_24dp,
+                painterDescription = R.string.content_description_salary,
+                label = R.string.form_salary,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                state = rememberTextFieldState()
+            )
         }
     }
 }
