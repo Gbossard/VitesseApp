@@ -66,6 +66,14 @@ fun AddCandidateScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 state = rememberTextFieldState()
             )
+            InformationSection(
+                painterRes = R.drawable.ic_edit_24dp,
+                painterDescription = R.string.content_description_notes,
+                label = R.string.form_notes,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Unspecified),
+                state = rememberTextFieldState(),
+                lineLimits = TextFieldLineLimits.MultiLine(8)
+            )
         }
     }
 }
@@ -110,7 +118,8 @@ fun InformationSection(
     painterDescription: Int,
     label: Int,
     keyboardOptions: KeyboardOptions,
-    state: TextFieldState
+    state: TextFieldState,
+    lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default
 ) {
     Row(
         modifier = modifier
@@ -127,6 +136,7 @@ fun InformationSection(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             state = state,
+            lineLimits = lineLimits,
             keyboardOptions = keyboardOptions,
             label = { Text(stringResource(label)) }
         )
