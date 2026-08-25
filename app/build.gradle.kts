@@ -64,6 +64,9 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
 
+    // Photo Picker
+    implementation(libs.androidx.photopicker.compose)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
 
