@@ -65,6 +65,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+    val candidatesUiState by viewModel.candidatesUiState.collectAsStateWithLifecycle()
+    val favoritesUiState by viewModel.favoritesUiState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             HomeSearch(
@@ -85,7 +87,8 @@ fun HomeScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             HomeTabs(
-                homeViewModel = viewModel
+                candidatesUiState = candidatesUiState,
+                favoritesUiState = favoritesUiState,
             )
         }
     }
@@ -149,12 +152,13 @@ fun HomeSearch(
 @Composable
 fun HomeTabs(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel
+    candidatesUiState: HomeUiState,
+    favoritesUiState: HomeUiState
 ) {
     var state by rememberSaveable { mutableIntStateOf(0) }
-    val uiState by when (state) {
-        0 -> homeViewModel.candidatesUiState.collectAsStateWithLifecycle()
-        else -> homeViewModel.favoritesUiState.collectAsStateWithLifecycle()
+    val uiState = when (state) {
+        0 -> candidatesUiState
+        else -> favoritesUiState
     }
 
     val titles = listOf(stringResource(R.string.tab_item_all), stringResource(R.string.tab_item_favorite))
@@ -177,7 +181,7 @@ fun HomeTabs(
             }
             is HomeUiState.Error -> {}
             is HomeUiState.Success -> {
-                CandidatesList(candidates = (uiState as HomeUiState.Success).candidates)
+                CandidatesList(candidates = uiState.candidates)
             }
             is HomeUiState.Loading -> {
                 LoadingContent()
