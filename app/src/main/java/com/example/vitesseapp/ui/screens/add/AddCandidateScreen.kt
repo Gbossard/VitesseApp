@@ -267,7 +267,7 @@ fun DateSection(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val state = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
-            DatePicker(state = state, modifier = Modifier.clip(shape = RoundedCornerShape(32.dp)))
+            DatePicker(state = state, focusRequester = null, modifier = Modifier.clip(shape = RoundedCornerShape(32.dp)))
         }
     }
 
