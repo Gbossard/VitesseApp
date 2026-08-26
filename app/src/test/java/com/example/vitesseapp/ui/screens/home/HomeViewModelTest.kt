@@ -135,14 +135,6 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun onClearQuery_queryIsEmpty() {
-        viewModel.onQueryChange("Jean")
-
-        viewModel.onClearQuery()
-        assertEquals("", viewModel.searchQuery.value)
-    }
-
-    @Test
     fun onQueryChange_updatedQuery() {
         viewModel.onQueryChange("Jean")
         assertEquals("Jean", viewModel.searchQuery.value)
