@@ -264,7 +264,6 @@ fun DateSection(modifier: Modifier = Modifier) {
             contentDescription = stringResource(R.string.content_description_date_of_birth)
         )
         Column(
-            modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             val state = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
