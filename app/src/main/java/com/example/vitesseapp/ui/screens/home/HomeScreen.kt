@@ -68,7 +68,6 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeSearch(
-                onClearQuery = viewModel::onClearQuery,
                 onQueryChange = viewModel::onQueryChange,
                 query = searchQuery
             )
@@ -97,8 +96,7 @@ fun HomeScreen(
 fun HomeSearch(
     modifier: Modifier = Modifier,
     query: String,
-    onQueryChange: (String) -> Unit,
-    onClearQuery: () -> Unit
+    onQueryChange: (String) -> Unit
 ) {
     val searchBarState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState(initialText = query)
@@ -126,7 +124,6 @@ fun HomeSearch(
                     if (textFieldState.text.isNotEmpty()) {
                         IconButton(onClick = {
                             textFieldState.clearText()
-                            onClearQuery()
                         }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_close_24dp),
@@ -300,7 +297,6 @@ private fun EmptyContentPreview() {
 private fun HomeSearchPreview() {
     VitesseAppTheme {
         HomeSearch(
-            onClearQuery = {},
             onQueryChange = {},
             query = ""
         )

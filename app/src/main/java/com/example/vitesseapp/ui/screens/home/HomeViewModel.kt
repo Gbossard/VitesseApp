@@ -48,10 +48,6 @@ class HomeViewModel @Inject constructor(
             candidateRepository.getAllFavorites(query = query)
         }
 
-    fun onClearQuery() {
-        _searchQuery.value = ""
-    }
-
     fun onQueryChange(newQuery: String) {
         _searchQuery.value = newQuery
     }
