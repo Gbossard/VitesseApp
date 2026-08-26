@@ -1,10 +1,9 @@
 package com.example.vitesseapp.ui.screens.add
 
 import android.net.Uri
-import android.os.Build
-import android.widget.photopicker.EmbeddedPhotoPickerFeatureInfo
-import androidx.annotation.RequiresApi
-import androidx.annotation.RequiresExtension
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
@@ -41,8 +39,8 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,16 +53,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.photopicker.compose.EmbeddedPhotoPicker
 import androidx.photopicker.compose.ExperimentalPhotoPickerComposeApi
-import androidx.photopicker.compose.rememberEmbeddedPhotoPickerState
 import coil3.compose.AsyncImage
 import com.example.vitesseapp.R
+import com.example.vitesseapp.ui.composable.EmbeddedPhotoPickerModalBottomSheet
+import com.example.vitesseapp.ui.composable.isEmbeddedPhotoPickerSupported
 import com.example.vitesseapp.ui.theme.VitesseAppTheme
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-@RequiresExtension(extension = Build.VERSION_CODES.UPSIDE_DOWN_CAKE, version = 15)
 @Composable
 fun AddCandidateScreen(
     onBackClick: () -> Unit
@@ -114,30 +110,34 @@ fun AddCandidateScreen(
         }
     }
 }
-@RequiresExtension(extension = Build.VERSION_CODES.UPSIDE_DOWN_CAKE, version = 15)
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPhotoPickerComposeApi::class)
 @Composable
 fun PhotoSection() {
-    var attachment by remember { mutableStateOf<Uri?>(null) }
+    var attachment by rememberSaveable { mutableStateOf<Uri?>(null) }
 
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetState = rememberBottomSheetState(
         initialValue = SheetValue.Hidden
     )
-    val pickerState = rememberEmbeddedPhotoPickerState(
-        onSelectionComplete = {
+
+    val pickMedia = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        if (uri != null) attachment = uri
+    }
+
+    val onPhotoPickerClick = {
+        if (isEmbeddedPhotoPickerSupported()) {
             coroutineScope.launch {
-                bottomSheetState.hide()
+                bottomSheetState.partialExpand()
             }
-        },
-        onUriPermissionGranted = { uris ->
-            attachment = uris.firstOrNull()
-        },
-        onUriPermissionRevoked = { uris ->
-            if (uris.contains(attachment)) attachment = null
+        } else {
+            pickMedia.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
         }
-    )
+    }
 
     Box(
         modifier = Modifier
@@ -155,11 +155,7 @@ fun PhotoSection() {
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .background(Color.LightGray)
-                    .clickable(onClick = {
-                        coroutineScope.launch {
-                            bottomSheetState.partialExpand()
-                        }
-                    }),
+                    .clickable(onClick = { onPhotoPickerClick() }),
                 colorFilter = ColorFilter.tint(Color.Gray)
             )
         } else {
@@ -168,32 +164,23 @@ fun PhotoSection() {
                 contentDescription = stringResource(R.string.content_description_photo),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .fillMaxWidth()
                     .clip(shape = RoundedCornerShape(32.dp))
-                    .clickable(onClick = {
-                        coroutineScope.launch {
-                            bottomSheetState.partialExpand()
-                        }
-                    })
+                    .clickable(onClick = { onPhotoPickerClick() })
             )
         }
     }
 
-    if (bottomSheetState.isVisible) {
-        ModalBottomSheet (
-            modifier = Modifier,
+    if (isEmbeddedPhotoPickerSupported() && bottomSheetState.isVisible) {
+        EmbeddedPhotoPickerModalBottomSheet(
             sheetState = bottomSheetState,
-            onDismissRequest = {}
-        ) {
-            Column(Modifier.fillMaxWidth()) {
-                EmbeddedPhotoPicker(
-                    state = pickerState,
-                    embeddedPhotoPickerFeatureInfo = EmbeddedPhotoPickerFeatureInfo
-                        .Builder()
-                        .setMaxSelectionLimit(1)
-                        .build()
-                )
+            onUriPermissionGranted = { uris ->
+                attachment = uris.firstOrNull()
+            },
+            onUriPermissionRevoked = { uris ->
+                if (uris.contains(attachment)) attachment = null
             }
-        }
+        )
     }
 }
 
@@ -321,8 +308,6 @@ private fun AppBarPreview() {
     }
 }
 
-@RequiresExtension(extension = Build.VERSION_CODES.UPSIDE_DOWN_CAKE, version = 15)
-@RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Preview(showBackground = true)
 @Composable
 private fun AddCandidateScreenPreview() {
