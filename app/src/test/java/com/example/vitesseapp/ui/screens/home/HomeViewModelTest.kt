@@ -1,7 +1,10 @@
 package com.example.vitesseapp.ui.screens.home
 
 import com.example.vitesseapp.data.local.CandidateEntity
-import com.example.vitesseapp.data.repository.FakeCandidateRepository
+import com.example.vitesseapp.data.repository.CandidateRepository
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -21,12 +24,16 @@ class HomeViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private lateinit var repository: FakeCandidateRepository
+    @get:Rule
+    val mockkRule = MockKRule(this)
+
+    @MockK
+    lateinit var repository: CandidateRepository
+
     private lateinit var viewModel: HomeViewModel
 
     @Before
     fun setUp() {
-        repository = FakeCandidateRepository()
         viewModel = HomeViewModel(repository)
     }
 
@@ -47,8 +54,7 @@ class HomeViewModelTest {
                 isFavorite = false
             )
         )
-        repository.candidatesFlow = flowOf(candidates)
-
+        every { repository.getAllCandidates(any()) } returns flowOf(candidates)
         val states = mutableListOf<HomeUiState>()
 
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
@@ -63,7 +69,7 @@ class HomeViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getCandidatesUiState_returnsEmptyState() = runTest {
-        repository.candidatesFlow = flowOf(emptyList())
+        every { repository.getAllCandidates(any()) } returns flowOf(emptyList())
         val states = mutableListOf<HomeUiState>()
 
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
@@ -78,11 +84,11 @@ class HomeViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getCandidatesUiState_returnsErrorState() = runTest {
-        repository.candidatesFlow = flow {
+        every { repository.getAllCandidates(any()) } returns flow {
             throw RuntimeException("Error")
         }
-
         val states = mutableListOf<HomeUiState>()
+
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             viewModel.candidatesUiState.collect { states.add(it) }
         }
@@ -121,8 +127,7 @@ class HomeViewModelTest {
                 isFavorite = true
             )
         )
-        repository.favoritesFlow = flowOf(favorites)
-
+        every { repository.getAllFavorites(any()) } returns flowOf(favorites)
         val states = mutableListOf<HomeUiState>()
 
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
@@ -139,5 +144,4 @@ class HomeViewModelTest {
         viewModel.onQueryChange("Jean")
         assertEquals("Jean", viewModel.searchQuery.value)
     }
-
 }
