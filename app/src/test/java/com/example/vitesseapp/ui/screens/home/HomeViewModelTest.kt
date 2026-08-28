@@ -1,5 +1,6 @@
 package com.example.vitesseapp.ui.screens.home
 
+import app.cash.turbine.test
 import com.example.vitesseapp.data.local.CandidateEntity
 import com.example.vitesseapp.data.repository.CandidateRepository
 import io.mockk.every
@@ -8,16 +9,12 @@ import io.mockk.junit4.MockKRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.time.LocalDate
-import kotlin.time.Duration.Companion.milliseconds
 
 class HomeViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -55,30 +52,24 @@ class HomeViewModelTest {
             )
         )
         every { repository.getAllCandidates(any()) } returns flowOf(candidates)
-        val states = mutableListOf<HomeUiState>()
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.candidatesUiState.collect { states.add(it) }
+        viewModel.candidatesUiState.test {
+            assertEquals(HomeUiState.Loading, awaitItem())
+            assertEquals(HomeUiState.Success(candidates), awaitItem())
+            cancelAndIgnoreRemainingEvents()
         }
-
-        advanceTimeBy(301.milliseconds)
-        assertEquals(HomeUiState.Loading, states[0])
-        assertEquals(HomeUiState.Success(candidates), states[1])
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getCandidatesUiState_returnsEmptyState() = runTest {
         every { repository.getAllCandidates(any()) } returns flowOf(emptyList())
-        val states = mutableListOf<HomeUiState>()
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.candidatesUiState.collect { states.add(it) }
+        viewModel.candidatesUiState.test {
+            assertEquals(HomeUiState.Loading, awaitItem())
+            assertEquals(HomeUiState.Empty, awaitItem())
+            cancelAndIgnoreRemainingEvents()
         }
-
-        advanceTimeBy(301.milliseconds)
-        assertEquals(HomeUiState.Loading, states[0])
-        assertEquals(HomeUiState.Empty, states[1])
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -87,15 +78,12 @@ class HomeViewModelTest {
         every { repository.getAllCandidates(any()) } returns flow {
             throw RuntimeException("Error")
         }
-        val states = mutableListOf<HomeUiState>()
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.candidatesUiState.collect { states.add(it) }
+        viewModel.candidatesUiState.test {
+            assertEquals(HomeUiState.Loading, awaitItem())
+            assertEquals(HomeUiState.Error, awaitItem())
+            cancelAndIgnoreRemainingEvents()
         }
-
-        advanceTimeBy(301.milliseconds)
-        assertEquals(HomeUiState.Loading, states[0])
-        assertEquals(HomeUiState.Error, states[1])
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -128,15 +116,11 @@ class HomeViewModelTest {
             )
         )
         every { repository.getAllFavorites(any()) } returns flowOf(favorites)
-        val states = mutableListOf<HomeUiState>()
 
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.favoritesUiState.collect { states.add(it) }
+        viewModel.favoritesUiState.test {
+            assertEquals(HomeUiState.Loading, awaitItem())
+            assertEquals(HomeUiState.Success(favorites), awaitItem())
         }
-
-        advanceTimeBy(301.milliseconds)
-        assertEquals(HomeUiState.Loading, states[0])
-        assertEquals(HomeUiState.Success(favorites), states[1])
     }
 
     @Test
