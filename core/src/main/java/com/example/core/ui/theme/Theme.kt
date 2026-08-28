@@ -1,4 +1,4 @@
-package com.example.vitesseapp.ui.theme
+package com.example.core.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -52,10 +52,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.core.ui.theme.VitesseAppTheme
 import com.example.vitesseapp.R
 import com.example.vitesseapp.data.local.CandidateEntity
 import com.example.vitesseapp.ui.composable.LoadingContent
-import com.example.vitesseapp.ui.theme.VitesseAppTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
