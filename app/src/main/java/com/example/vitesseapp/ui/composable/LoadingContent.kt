@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.vitesseapp.ui.theme.VitesseAppTheme
+import com.example.core.ui.theme.VitesseAppTheme
 
 @OptIn( ExperimentalMaterial3ExpressiveApi::class)
 @Composable

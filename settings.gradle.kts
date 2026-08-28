@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "VitesseApp"
 include(":app")
+include(":core")

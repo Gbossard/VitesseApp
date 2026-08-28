@@ -55,10 +55,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.photopicker.compose.ExperimentalPhotoPickerComposeApi
 import coil3.compose.AsyncImage
+import com.example.core.ui.theme.VitesseAppTheme
 import com.example.vitesseapp.R
 import com.example.vitesseapp.ui.composable.EmbeddedPhotoPickerModalBottomSheet
 import com.example.vitesseapp.ui.composable.isEmbeddedPhotoPickerSupported
-import com.example.vitesseapp.ui.theme.VitesseAppTheme
 import kotlinx.coroutines.launch
 
 @Composable
