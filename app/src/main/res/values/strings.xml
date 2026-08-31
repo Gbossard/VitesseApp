@@ -1,28 +1,3 @@
 <resources>
     <string name="app_name">VitesseApp</string>
-
-    <string name="tab_item_all">All</string>
-    <string name="tab_item_favorite">Favorites</string>
-
-    <string name="search_bar">Search</string>
-    <string name="empty_list_candidate">No candidate</string>
-    <string name="add_candidate">Add a candidate</string>
-
-    <string name="form_first_name">First name</string>
-    <string name="form_last_name">Last name</string>
-    <string name="form_phone_number">Phone</string>
-    <string name="form_email">Email</string>
-    <string name="form_salary">Expected salary</string>
-    <string name="form_notes">Notes</string>
-
-    <string name="content_description_delete_query">Delete the query</string>
-    <string name="content_description_empty_image">Empty Image</string>
-    <string name="content_description_photo">Photo of candidate</string>
-    <string name="content_description_back">Go back</string>
-    <string name="content_description_person_name">Person\'s name</string>
-    <string name="content_description_phone_number">Phone number</string>
-    <string name="content_description_email">Email address</string>
-    <string name="content_description_date_of_birth">Date of Birth</string>
-    <string name="content_description_salary">Salary</string>
-    <string name="content_description_notes">Notes about the candidate</string>
 </resources>

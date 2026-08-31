@@ -4,9 +4,6 @@
 
     <string name="search_bar">Search</string>
     <string name="empty_list_candidate">No candidate</string>
-    <string name="add_candidate">Add a candidate</string>
 
     <string name="content_description_delete_query">Delete the query</string>
-    <string name="content_description_empty_image">Empty Image</string>
-    <string name="content_description_photo">Photo of candidate</string>
 </resources>

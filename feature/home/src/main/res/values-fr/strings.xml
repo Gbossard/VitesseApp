@@ -5,9 +5,6 @@
 
     <string name="search_bar">Rechercher un candidat</string>
     <string name="empty_list_candidate">Aucun candidat</string>
-    <string name="add_candidate">Ajouter un candidat</string>
 
     <string name="content_description_delete_query">Supprimer la recherche</string>
-    <string name="content_description_empty_image">Image vide</string>
-    <string name="content_description_photo">Photo du candidat</string>
 </resources>
