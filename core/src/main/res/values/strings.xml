@@ -1,0 +1,15 @@
+<resources>
+    <string name="add_candidate">Add a candidate</string>
+
+    <string name="form_phone_number">Phone</string>
+    <string name="form_email">Email</string>
+    <string name="form_salary">Expected salary</string>
+    <string name="form_notes">Notes</string>
+
+    <string name="content_description_empty_image">Empty Image</string>
+    <string name="content_description_photo">Photo of candidate</string>
+    <string name="content_description_back">Go back</string>
+    <string name="content_description_phone_number">Phone number</string>
+    <string name="content_description_email">Email address</string>
+    <string name="content_description_salary">Salary</string>
+</resources>
