@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="form_first_name">Prénom</string>
+    <string name="form_last_name">Nom</string>
+
+    <string name="content_description_person_name">Nom de la personne</string>
+    <string name="content_description_date_of_birth">Date de naissance</string>
+    <string name="content_description_notes">Notes à propos du candidat</string>
+</resources>

@@ -1,4 +1,4 @@
-package com.example.vitesseapp.ui.composable
+package com.example.feature.edit_page.ui.composable
 
 import android.net.Uri
 import android.os.Build

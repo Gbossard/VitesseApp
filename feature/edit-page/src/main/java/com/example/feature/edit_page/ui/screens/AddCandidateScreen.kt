@@ -1,4 +1,4 @@
-package com.example.vitesseapp.ui.screens.add
+package com.example.feature.edit_page.ui.screens
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -56,9 +56,9 @@ import androidx.compose.ui.unit.dp
 import androidx.photopicker.compose.ExperimentalPhotoPickerComposeApi
 import coil3.compose.AsyncImage
 import com.example.core.ui.theme.VitesseAppTheme
-import com.example.vitesseapp.R
-import com.example.vitesseapp.ui.composable.EmbeddedPhotoPickerModalBottomSheet
-import com.example.vitesseapp.ui.composable.isEmbeddedPhotoPickerSupported
+import com.example.feature.edit_page.R
+import com.example.feature.edit_page.ui.composable.EmbeddedPhotoPickerModalBottomSheet
+import com.example.feature.edit_page.ui.composable.isEmbeddedPhotoPickerSupported
 import kotlinx.coroutines.launch
 
 @Composable
@@ -78,31 +78,31 @@ fun AddCandidateScreen(
             PhotoSection()
             NameSection()
             InformationSection(
-                painterRes = R.drawable.ic_call_24dp,
-                painterDescription = R.string.content_description_phone_number,
-                label = R.string.form_phone_number,
+                painterRes = com.example.core.R.drawable.ic_call_24dp,
+                painterDescription = com.example.core.R.string.content_description_phone_number,
+                label = com.example.core.R.string.form_phone_number,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                 state = rememberTextFieldState()
             )
             InformationSection(
-                painterRes = R.drawable.ic_mail_24dp,
-                painterDescription = R.string.content_description_email,
-                label = R.string.form_email,
+                painterRes = com.example.core.R.drawable.ic_mail_24dp,
+                painterDescription = com.example.core.R.string.content_description_email,
+                label = com.example.core.R.string.form_email,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 state = rememberTextFieldState()
             )
             DateSection()
             InformationSection(
                 painterRes = R.drawable.ic_attach_money_24dp,
-                painterDescription = R.string.content_description_salary,
-                label = R.string.form_salary,
+                painterDescription = com.example.core.R.string.content_description_salary,
+                label = com.example.core.R.string.form_salary,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 state = rememberTextFieldState()
             )
             InformationSection(
-                painterRes = R.drawable.ic_edit_24dp,
+                painterRes = com.example.core.R.drawable.ic_edit_24dp,
                 painterDescription = R.string.content_description_notes,
-                label = R.string.form_notes,
+                label = com.example.core.R.string.form_notes,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Unspecified),
                 state = rememberTextFieldState(),
                 lineLimits = TextFieldLineLimits.MultiLine(8)
@@ -149,7 +149,7 @@ fun PhotoSection() {
         if (attachment == null) {
             Image(
                 painter = painterResource(com.example.core.R.drawable.ic_empty_image_24dp),
-                contentDescription = stringResource(R.string.content_description_empty_image),
+                contentDescription = stringResource(com.example.core.R.string.content_description_empty_image),
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(32.dp))
                     .fillMaxWidth()
@@ -161,7 +161,7 @@ fun PhotoSection() {
         } else {
             AsyncImage(
                 model = attachment,
-                contentDescription = stringResource(R.string.content_description_photo),
+                contentDescription = stringResource(com.example.core.R.string.content_description_photo),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -281,13 +281,13 @@ fun AppBar(
     TopAppBar(
         modifier = modifier,
         title = {
-            Text(text = stringResource(R.string.add_candidate))
+            Text(text = stringResource(com.example.core.R.string.add_candidate))
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_arrow_back_24dp),
-                    contentDescription = stringResource(R.string.content_description_back)
+                    painter = painterResource(com.example.core.R.drawable.ic_arrow_back_24dp),
+                    contentDescription = stringResource(com.example.core.R.string.content_description_back)
                 )
             }
         },
