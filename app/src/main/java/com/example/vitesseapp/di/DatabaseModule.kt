@@ -1,7 +1,7 @@
 package com.example.vitesseapp.di
 
 import android.content.Context
-import com.example.vitesseapp.data.local.CandidateDao
+import com.example.core.data.local.CandidateDao
 import com.example.vitesseapp.data.local.CandidateDatabase
 import dagger.Module
 import dagger.Provides
