@@ -1,4 +1,4 @@
-package com.example.vitesseapp.ui.screens.home
+package com.example.feature.home.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -52,10 +52,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.example.core.data.local.CandidateEntity
+import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.theme.VitesseAppTheme
-import com.example.vitesseapp.R
-import com.example.vitesseapp.data.local.CandidateEntity
-import com.example.vitesseapp.ui.composable.LoadingContent
+import com.example.feature.home.R
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -215,7 +215,7 @@ fun CandidateItem(
     ) {
         if (candidate.photo == null) {
             Image(
-                painter = painterResource(R.drawable.ic_empty_image_24dp),
+                painter = painterResource(com.example.core.R.drawable.ic_empty_image_24dp),
                 contentDescription = stringResource(R.string.content_description_empty_image),
                 modifier = Modifier
                     .width(56.dp)

@@ -25,3 +25,5 @@ dependencyResolutionManagement {
 rootProject.name = "VitesseApp"
 include(":app")
 include(":core")
+include(":core:testing")
+include(":feature:home")

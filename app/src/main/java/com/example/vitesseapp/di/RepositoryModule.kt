@@ -1,7 +1,7 @@
 package com.example.vitesseapp.di
 
-import com.example.vitesseapp.data.repository.CandidateRepository
-import com.example.vitesseapp.data.repository.CandidateRepositoryImpl
+import com.example.core.data.repository.CandidateRepository
+import com.example.core.data.repository.CandidateRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

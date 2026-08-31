@@ -1,9 +1,9 @@
-package com.example.vitesseapp.ui.screens.home
+package com.example.feature.home.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.vitesseapp.data.local.CandidateEntity
-import com.example.vitesseapp.data.repository.CandidateRepository
+import com.example.core.data.local.CandidateEntity
+import com.example.core.data.repository.CandidateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

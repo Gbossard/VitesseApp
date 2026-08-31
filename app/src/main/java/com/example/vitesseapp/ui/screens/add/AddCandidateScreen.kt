@@ -148,7 +148,7 @@ fun PhotoSection() {
     ) {
         if (attachment == null) {
             Image(
-                painter = painterResource(R.drawable.ic_empty_image_24dp),
+                painter = painterResource(com.example.core.R.drawable.ic_empty_image_24dp),
                 contentDescription = stringResource(R.string.content_description_empty_image),
                 modifier = Modifier
                     .clip(shape = RoundedCornerShape(32.dp))

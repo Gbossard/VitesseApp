@@ -1,4 +1,4 @@
-package com.example.vitesseapp.data.local
+package com.example.core.data.local
 
 import androidx.room3.Entity
 import androidx.room3.PrimaryKey

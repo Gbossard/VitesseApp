@@ -1,8 +1,11 @@
-package com.example.vitesseapp.ui.screens.home
+package com.example.feature.home
 
 import app.cash.turbine.test
-import com.example.vitesseapp.data.local.CandidateEntity
-import com.example.vitesseapp.data.repository.CandidateRepository
+import com.example.core.data.local.CandidateEntity
+import com.example.core.data.repository.CandidateRepository
+import com.example.core.testing.MainDispatcherRule
+import com.example.feature.home.ui.HomeUiState
+import com.example.feature.home.ui.HomeViewModel
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
@@ -10,6 +13,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -126,6 +130,6 @@ class HomeViewModelTest {
     @Test
     fun onQueryChange_updatedQuery() {
         viewModel.onQueryChange("Jean")
-        assertEquals("Jean", viewModel.searchQuery.value)
+        Assert.assertEquals("Jean", viewModel.searchQuery.value)
     }
 }

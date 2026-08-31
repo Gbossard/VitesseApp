@@ -1,7 +1,8 @@
 package com.example.vitesseapp.data.repository
 
-import com.example.vitesseapp.data.local.CandidateDao
-import com.example.vitesseapp.data.local.CandidateEntity
+import com.example.core.data.local.CandidateDao
+import com.example.core.data.local.CandidateEntity
+import com.example.core.data.repository.CandidateRepositoryImpl
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule

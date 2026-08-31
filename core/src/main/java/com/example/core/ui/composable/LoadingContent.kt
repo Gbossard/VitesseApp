@@ -1,4 +1,4 @@
-package com.example.vitesseapp.ui.composable
+package com.example.core.ui.composable
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

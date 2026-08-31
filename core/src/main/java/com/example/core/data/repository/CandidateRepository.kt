@@ -1,7 +1,7 @@
-package com.example.vitesseapp.data.repository
+package com.example.core.data.repository
 
-import com.example.vitesseapp.data.local.CandidateDao
-import com.example.vitesseapp.data.local.CandidateEntity
+import com.example.core.data.local.CandidateDao
+import com.example.core.data.local.CandidateEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
