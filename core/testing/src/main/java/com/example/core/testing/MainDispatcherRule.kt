@@ -1,4 +1,4 @@
-package com.example.vitesseapp.ui.screens.home
+package com.example.core.testing
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
