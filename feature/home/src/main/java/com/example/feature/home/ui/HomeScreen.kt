@@ -78,7 +78,7 @@ fun HomeScreen(
             FloatingActionButton(onClick = onFabClick) {
                 Icon(
                     painter = painterResource(R.drawable.ic_add_24dp),
-                    contentDescription = stringResource(R.string.add_candidate)
+                    contentDescription = stringResource(com.example.core.R.string.add_candidate)
                 )
             }
         }
@@ -216,7 +216,7 @@ fun CandidateItem(
         if (candidate.photo == null) {
             Image(
                 painter = painterResource(com.example.core.R.drawable.ic_empty_image_24dp),
-                contentDescription = stringResource(R.string.content_description_empty_image),
+                contentDescription = stringResource(com.example.core.R.string.content_description_empty_image),
                 modifier = Modifier
                     .width(56.dp)
                     .height(56.dp)
@@ -229,7 +229,7 @@ fun CandidateItem(
                     .data(candidate.photo)
                     .crossfade(true)
                     .build(),
-                contentDescription = stringResource(R.string.content_description_photo),
+                contentDescription = stringResource(com.example.core.R.string.content_description_photo),
                 modifier = Modifier
                     .width(56.dp)
                     .height(56.dp)
