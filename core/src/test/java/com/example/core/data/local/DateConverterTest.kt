@@ -1,6 +1,6 @@
-package com.example.vitesseapp.data.local
+package com.example.core.data.local
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate

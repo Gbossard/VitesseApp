@@ -1,4 +1,4 @@
-package com.example.vitesseapp.di
+package com.example.core.di
 
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.repository.CandidateRepositoryImpl
