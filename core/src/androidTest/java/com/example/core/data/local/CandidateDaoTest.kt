@@ -1,4 +1,4 @@
-package com.example.vitesseapp.data.local
+package com.example.core.data.local
 
 import android.content.Context
 import androidx.room3.Room
@@ -6,8 +6,6 @@ import androidx.room3.executeSQL
 import androidx.room3.useWriterConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
-import com.example.core.data.local.CandidateDao
-import com.example.core.data.local.CandidateEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest

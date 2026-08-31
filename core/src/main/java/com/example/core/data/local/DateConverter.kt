@@ -1,4 +1,4 @@
-package com.example.vitesseapp.data.local
+package com.example.core.data.local
 
 import android.os.Build
 import androidx.annotation.RequiresApi
