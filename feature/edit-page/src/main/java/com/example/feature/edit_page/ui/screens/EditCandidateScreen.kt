@@ -64,7 +64,7 @@ import com.example.feature.edit_page.ui.composable.isEmbeddedPhotoPickerSupporte
 import kotlinx.coroutines.launch
 
 @Composable
-fun AddCandidateScreen(
+fun EditCandidateScreen(
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
@@ -324,9 +324,9 @@ private fun AppBarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AddCandidateScreenPreview() {
+private fun EditCandidateScreenPreview() {
     VitesseAppTheme {
-        AddCandidateScreen(
+        EditCandidateScreen(
             onBackClick = {},
             onSaveClick = {}
         )
