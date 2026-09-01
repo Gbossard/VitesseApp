@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.feature.home.ui.HomeScreen
-import com.example.feature.edit_page.ui.screens.AddCandidateScreen
+import com.example.feature.edit_page.ui.screens.EditCandidateScreen
 
 @Composable
 fun VitesseNavHost() {
@@ -14,12 +14,12 @@ fun VitesseNavHost() {
         composable<Home> {
             HomeScreen(
                 onFabClick = {
-                    navController.navigate(AddCandidate)
+                    navController.navigate(EditCandidate)
                 }
             )
         }
-        composable<AddCandidate> {
-            AddCandidateScreen(
+        composable<EditCandidate> {
+            EditCandidateScreen(
                 onBackClick = {
                     navController.popBackStack()
                 },

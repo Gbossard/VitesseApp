@@ -5,4 +5,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object Home
 @Serializable
-data object AddCandidate
+data object EditCandidate
