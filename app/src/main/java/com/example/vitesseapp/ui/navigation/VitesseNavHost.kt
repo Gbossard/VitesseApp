@@ -22,6 +22,9 @@ fun VitesseNavHost() {
             AddCandidateScreen(
                 onBackClick = {
                     navController.popBackStack()
+                },
+                onSaveClick = {
+                    navController.navigate(Home)
                 }
             )
         }
