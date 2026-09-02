@@ -2,6 +2,7 @@ package com.example.core.data.local
 
 import androidx.room3.Dao
 import androidx.room3.Query
+import androidx.room3.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,4 +20,7 @@ interface CandidateDao {
             OR (lastName || ' ' || firstName) LIKE '%' || :query || '%' )
     """)
     fun getAllFavorites(query: String): Flow<List<CandidateEntity>>
+
+    @Upsert
+    suspend fun upsertCandidate(candidate: CandidateEntity)
 }
