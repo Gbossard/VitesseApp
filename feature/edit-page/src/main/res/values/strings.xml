@@ -1,5 +1,6 @@
 <resources>
     <string name="form_save">Save</string>
+    <string name="form_save_error">Failed to save candidate. Please try again.</string>
 
     <string name="form_first_name">First name</string>
     <string name="form_last_name">Last name</string>
