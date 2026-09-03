@@ -92,8 +92,14 @@ fun EditCandidateScreen(
                 is EditUiEvent.SaveSuccess -> {
                     onSaveClick()
                 }
-                is EditUiEvent.SaveError -> {
-                    snackbarHostState.showSnackbar(message = context.resources.getString(R.string.form_save_error))
+                is EditUiEvent.SaveErrorEvent -> {
+                    val resourcesId = when(event.error) {
+                        is SaveError.DatabaseError -> R.string.form_error_save_database
+                        is SaveError.FileNotFound -> R.string.form_error_save_file_not_found
+                        is SaveError.StorageFull -> R.string.form_error_save_storage_full
+                        is SaveError.Unknown -> R.string.form_error_save_unknown
+                    }
+                    snackbarHostState.showSnackbar(message = context.resources.getString(resourcesId))
                 }
             }
         }

@@ -1,6 +1,9 @@
 <resources>
     <string name="form_save">Save</string>
-    <string name="form_save_error">Failed to save candidate. Please try again.</string>
+    <string name="form_error_save_database">Unable to save candidate to the database.</string>
+    <string name="form_error_save_file_not_found">The selected photo was not found or is inaccessible.</string>
+    <string name="form_error_save_storage_full">Not enough storage space on the device to save the photo.</string>
+    <string name="form_error_save_unknown">Failed to save candidate. Please try again.</string>
 
     <string name="form_first_name">First name</string>
     <string name="form_last_name">Last name</string>
