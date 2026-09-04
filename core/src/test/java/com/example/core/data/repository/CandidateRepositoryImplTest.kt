@@ -2,9 +2,13 @@ package com.example.core.data.repository
 
 import com.example.core.data.local.CandidateDao
 import com.example.core.data.local.CandidateEntity
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
+import io.mockk.just
+import io.mockk.runs
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -100,5 +104,26 @@ class CandidateRepositoryImplTest {
         )
         every { candidateDao.getAllFavorites("") } returns flowOf(listOfFavorites)
         assertEquals(listOfFavorites, candidateRepositoryImpl.getAllFavorites("").first())
+    }
+
+    @Test
+    fun upsertCandidate_saveCandidateToDao() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        coEvery { candidateDao.upsertCandidate(candidate) } just runs
+
+        candidateRepositoryImpl.upsertCandidate(candidate)
+
+        coVerify(exactly = 1) { candidateDao.upsertCandidate(candidate) }
     }
 }
