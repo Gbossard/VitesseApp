@@ -14,6 +14,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.time.LocalDate
 
 class CandidateDaoTest {
 
@@ -50,6 +51,7 @@ class CandidateDaoTest {
         db.close()
     }
 
+    // getAllCandidates
     @Test
     fun getAllCandidates_whenDatabaseIsEmpty_returnsEmptyList() = runTest {
         result = candidateDao.getAllCandidates("")
@@ -70,6 +72,7 @@ class CandidateDaoTest {
         assertEquals(1, result.first().size)
     }
 
+    // getAllFavorites
     @Test
     fun getAllFavorites_whenDatabaseIsEmpty_returnsEmptyList() = runTest {
         result = candidateDao.getAllFavorites("")
@@ -90,4 +93,56 @@ class CandidateDaoTest {
         assertEquals(1, result.first().size)
     }
 
+    // upsertCandidate
+    @Test
+    fun upsertCandidate_addCandidate() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        result = candidateDao.getAllCandidates("")
+        assertEquals(0, result.first().size)
+
+        candidateDao.upsertCandidate(candidate)
+        assertEquals(1, result.first().size)
+    }
+
+    @Test
+    fun upsertCandidate_updateCandidate() = runTest {
+        val initialCandidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        candidateDao.upsertCandidate(initialCandidate)
+
+        result = candidateDao.getAllCandidates("")
+        assertEquals(1, result.first().size)
+
+        val updatedCandidate = initialCandidate.copy(
+            firstName = "Fake first name update",
+            lastName = "Fake last name update",
+            notes = "fake note update",
+            isFavorite = true
+        )
+        candidateDao.upsertCandidate(updatedCandidate)
+
+        assertEquals(1, result.first().size)
+        assertEquals(updatedCandidate, result.first().first())
+    }
 }
