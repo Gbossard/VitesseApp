@@ -2,8 +2,6 @@ package com.example.core.data.local
 
 import android.content.Context
 import androidx.room3.Room
-import androidx.room3.executeSQL
-import androidx.room3.useWriterConnection
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
 import kotlinx.coroutines.flow.Flow
@@ -30,22 +28,6 @@ class CandidateDaoTest {
         candidateDao = db.candidateDao()
     }
 
-    private suspend fun insertCandidate() {
-        db.useWriterConnection { connection ->
-            connection.executeSQL(
-                """
-                    INSERT INTO candidate_table 
-                    ( id, firstName, lastName, phone, email, dateOfBirth, photo, salary, notes, isFavorite) 
-                        VALUES 
-                            ('1', 'Jean', 'Dupont', '0601020304', 'jean.dupont@gmail.com', '1992-06-20', NULL, 45000, 'Available now', 1),
-                            ('2', 'Robert', 'Dupont', '0602030405', 'robert.dupont@gmail.com', '1993-01-26', NULL, 50000, 'Available in 3 months', 0),
-                            ('3', 'Michel', 'Martin', '0645789562', 'michel.martin@gmail.com', '1956-08-23', NULL, 90000, 'Available in 1 week', 1)
- 
-                """
-            )
-        }
-    }
-
     @After
     fun closeDb() {
         db.close()
@@ -60,14 +42,90 @@ class CandidateDaoTest {
 
     @Test
     fun getAllCandidates_whenQueryIsEmpty_returnsAllCandidates() = runTest {
-        insertCandidate()
+        val candidate1 = CandidateEntity(
+            id = "1",
+            firstName = "Jean",
+            lastName = "Dupont",
+            phone = "0601020304",
+            email = "jean.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 45000,
+            notes = "Available now",
+            isFavorite = true
+        )
+        val candidate2 = CandidateEntity(
+            id = "2",
+            firstName = "Robert",
+            lastName = "Dupont",
+            phone = "0602030405",
+            email = "robert.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1993-01-26"),
+            photo = null,
+            salary = 50000,
+            notes = "Available in 3 months",
+            isFavorite = false
+        )
+        val candidate3 = CandidateEntity(
+            id = "3",
+            firstName = "Michel",
+            lastName = "Martin",
+            phone = "0645789562",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1956-08-23"),
+            photo = null,
+            salary = 90000,
+            notes = "Available in 1 week",
+            isFavorite = true
+        )
+        candidateDao.upsertCandidate(candidate1)
+        candidateDao.upsertCandidate(candidate2)
+        candidateDao.upsertCandidate(candidate3)
         result = candidateDao.getAllCandidates("")
         assertEquals(3, result.first().size)
     }
 
     @Test
     fun getAllCandidates_whenQueryIsNotEmpty_returnsFilteredCandidates() = runTest {
-        insertCandidate()
+        val candidate1 = CandidateEntity(
+            id = "1",
+            firstName = "Jean",
+            lastName = "Dupont",
+            phone = "0601020304",
+            email = "jean.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 45000,
+            notes = "Available now",
+            isFavorite = true
+        )
+        val candidate2 = CandidateEntity(
+            id = "2",
+            firstName = "Robert",
+            lastName = "Dupont",
+            phone = "0602030405",
+            email = "robert.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1993-01-26"),
+            photo = null,
+            salary = 50000,
+            notes = "Available in 3 months",
+            isFavorite = false
+        )
+        val candidate3 = CandidateEntity(
+            id = "3",
+            firstName = "Michel",
+            lastName = "Martin",
+            phone = "0645789562",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1956-08-23"),
+            photo = null,
+            salary = 90000,
+            notes = "Available in 1 week",
+            isFavorite = true
+        )
+        candidateDao.upsertCandidate(candidate1)
+        candidateDao.upsertCandidate(candidate2)
+        candidateDao.upsertCandidate(candidate3)
         result = candidateDao.getAllCandidates("Jean")
         assertEquals(1, result.first().size)
     }
@@ -81,14 +139,90 @@ class CandidateDaoTest {
 
     @Test
     fun getAllFavorites_whenQueryIsEmpty_returnsAllFavorites() = runTest {
-        insertCandidate()
+        val candidate1 = CandidateEntity(
+            id = "1",
+            firstName = "Jean",
+            lastName = "Dupont",
+            phone = "0601020304",
+            email = "jean.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 45000,
+            notes = "Available now",
+            isFavorite = true
+        )
+        val candidate2 = CandidateEntity(
+            id = "2",
+            firstName = "Robert",
+            lastName = "Dupont",
+            phone = "0602030405",
+            email = "robert.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1993-01-26"),
+            photo = null,
+            salary = 50000,
+            notes = "Available in 3 months",
+            isFavorite = false
+        )
+        val candidate3 = CandidateEntity(
+            id = "3",
+            firstName = "Michel",
+            lastName = "Martin",
+            phone = "0645789562",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1956-08-23"),
+            photo = null,
+            salary = 90000,
+            notes = "Available in 1 week",
+            isFavorite = true
+        )
+        candidateDao.upsertCandidate(candidate1)
+        candidateDao.upsertCandidate(candidate2)
+        candidateDao.upsertCandidate(candidate3)
         result = candidateDao.getAllFavorites("")
         assertEquals(2, result.first().size)
     }
 
     @Test
     fun getAllFavorites_whenQueryIsNotEmpty_returnsFilteredFavorites() = runTest {
-        insertCandidate()
+        val candidate1 = CandidateEntity(
+            id = "1",
+            firstName = "Jean",
+            lastName = "Dupont",
+            phone = "0601020304",
+            email = "jean.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 45000,
+            notes = "Available now",
+            isFavorite = true
+        )
+        val candidate2 = CandidateEntity(
+            id = "2",
+            firstName = "Robert",
+            lastName = "Dupont",
+            phone = "0602030405",
+            email = "robert.dupont@gmail.com",
+            dateOfBirth = LocalDate.parse("1993-01-26"),
+            photo = null,
+            salary = 50000,
+            notes = "Available in 3 months",
+            isFavorite = false
+        )
+        val candidate3 = CandidateEntity(
+            id = "3",
+            firstName = "Michel",
+            lastName = "Martin",
+            phone = "0645789562",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1956-08-23"),
+            photo = null,
+            salary = 90000,
+            notes = "Available in 1 week",
+            isFavorite = true
+        )
+        candidateDao.upsertCandidate(candidate1)
+        candidateDao.upsertCandidate(candidate2)
+        candidateDao.upsertCandidate(candidate3)
         result = candidateDao.getAllFavorites("Dupont")
         assertEquals(1, result.first().size)
     }
