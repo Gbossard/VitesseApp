@@ -21,8 +21,10 @@ android {
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.test)
-    implementation(libs.junit)
+    api(libs.kotlinx.coroutines.test)
+    api(libs.junit)
+    api(libs.mockk.jvm)
+    api(libs.turbine)
 
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)

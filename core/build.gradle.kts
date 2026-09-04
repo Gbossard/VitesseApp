@@ -26,18 +26,19 @@ android {
 }
 
 dependencies {
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.ui.tooling.preview)
+
+    // Hilt
+    api(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 
     // Room
     implementation(libs.androidx.room3.runtime)
     implementation(libs.androidx.sqlite.bundled)
     ksp(libs.androidx.room3.compiler)
 
-    // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
