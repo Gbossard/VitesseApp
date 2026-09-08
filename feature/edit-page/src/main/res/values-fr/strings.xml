@@ -5,6 +5,8 @@
     <string name="form_error_save_file_not_found">La photo sélectionnée est introuvable ou inaccessible.</string>
     <string name="form_error_save_storage_full">Espace de stockage insuffisant sur le téléphone pour sauvegarder la photo.</string>
     <string name="form_error_save_unknown">Erreur lors de la sauvegarde du candidat. Veuillez réessayer.</string>
+    <string name="form_mandatory_field">Champ obligatoire</string>
+    <string name="form_invalid_format">Format invalide</string>
 
     <string name="form_first_name">Prénom</string>
     <string name="form_last_name">Nom</string>
