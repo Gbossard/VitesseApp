@@ -71,6 +71,7 @@ import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.edit_page.R
 import com.example.feature.edit_page.ui.composable.EmbeddedPhotoPickerModalBottomSheet
 import com.example.feature.edit_page.ui.composable.isEmbeddedPhotoPickerSupported
+import com.example.feature.edit_page.ui.composable.toErrorMessageRes
 import com.example.feature.edit_page.ui.composable.toLocalDate
 import kotlinx.coroutines.launch
 
@@ -136,26 +137,30 @@ fun EditCandidateScreen(
             )
             NameSection(
                 firstName = editUiState.firstName,
-                lastName = editUiState.lastName
+                firstNameError = editUiState.firstNameError,
+                lastName = editUiState.lastName,
+                lastNameError = editUiState.lastNameError
             )
             InformationSection(
                 painterRes = com.example.core.R.drawable.ic_call_24dp,
                 painterDescription = com.example.core.R.string.content_description_phone_number,
                 label = com.example.core.R.string.form_phone_number,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                state = editUiState.phone
+                state = editUiState.phone,
+                fieldError = editUiState.phoneError
             )
             InformationSection(
                 painterRes = com.example.core.R.drawable.ic_mail_24dp,
                 painterDescription = com.example.core.R.string.content_description_email,
                 label = com.example.core.R.string.form_email,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                state = editUiState.email
+                state = editUiState.email,
+                fieldError = editUiState.emailError
             )
             DateSection(
+                dateOfBirthError = editUiState.dateOfBirthError,
                 onDateOfBirthChange = { millis ->
                     viewModel.onDateOfBirthChange(millis?.toLocalDate())
-
                 }
             )
             InformationSection(
@@ -264,7 +269,9 @@ fun PhotoSection(
 fun NameSection(
     modifier: Modifier = Modifier,
     firstName: TextFieldState,
-    lastName: TextFieldState
+    firstNameError: FieldError?,
+    lastName: TextFieldState,
+    lastNameError: FieldError?
 ) {
     Row(
         modifier = modifier
@@ -282,14 +289,30 @@ fun NameSection(
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 state = firstName,
+                isError = firstNameError != null,
+                supportingText = {
+                    firstNameError?.let {
+                        Text(
+                            text = stringResource(it.toErrorMessageRes())
+                        )
+                    }
+                },
                 lineLimits = TextFieldLineLimits.SingleLine,
                 label = { Text(stringResource(R.string.form_first_name)) }
             )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp),
+                    .padding(top = 24.dp),
                 state = lastName,
+                isError = lastNameError != null,
+                supportingText = {
+                    lastNameError?.let {
+                        Text(
+                            text = stringResource(it.toErrorMessageRes())
+                        )
+                    }
+                },
                 lineLimits = TextFieldLineLimits.SingleLine,
                 label = { Text(stringResource(R.string.form_last_name)) }
             )
@@ -305,7 +328,8 @@ fun InformationSection(
     label: Int,
     keyboardOptions: KeyboardOptions,
     state: TextFieldState,
-    lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default
+    lineLimits: TextFieldLineLimits = TextFieldLineLimits.Default,
+    fieldError: FieldError? = null
 ) {
     Row(
         modifier = modifier
@@ -322,6 +346,14 @@ fun InformationSection(
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             state = state,
+            isError = fieldError != null,
+            supportingText = {
+                fieldError?.let {
+                    Text(
+                        text = stringResource(it.toErrorMessageRes())
+                    )
+                }
+            },
             lineLimits = lineLimits,
             keyboardOptions = keyboardOptions,
             label = { Text(stringResource(label)) }
@@ -332,6 +364,7 @@ fun InformationSection(
 @Composable
 fun DateSection(
     modifier: Modifier = Modifier,
+    dateOfBirthError: FieldError?,
     onDateOfBirthChange: (Long?) -> Unit
 ) {
     val state = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
@@ -356,7 +389,16 @@ fun DateSection(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DatePicker(state = state, focusRequester = null, modifier = Modifier.clip(shape = RoundedCornerShape(32.dp)))
+            if (dateOfBirthError != null) {
+                Text(
+                    text = stringResource(dateOfBirthError.toErrorMessageRes()),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
         }
+
     }
 
 }
@@ -413,7 +455,9 @@ private fun NameSectionPreview() {
     VitesseAppTheme {
         NameSection(
             firstName = rememberTextFieldState("Jean"),
-            lastName = rememberTextFieldState("Dupont")
+            firstNameError = null,
+            lastName = rememberTextFieldState("Dupont"),
+            lastNameError = null
         )
     }
 }
