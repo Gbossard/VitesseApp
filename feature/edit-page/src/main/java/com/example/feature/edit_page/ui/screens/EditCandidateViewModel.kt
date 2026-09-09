@@ -2,6 +2,7 @@ package com.example.feature.edit_page.ui.screens
 
 import android.net.Uri
 import android.os.Build
+import android.util.Patterns
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
@@ -32,7 +33,12 @@ data class EditUiState(
     val photo: Uri? = null,
     val salary: TextFieldState = TextFieldState(),
     val notes: TextFieldState = TextFieldState(),
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false,
+    val firstNameError: FieldError? = null,
+    val lastNameError: FieldError? = null,
+    val phoneError: FieldError? = null,
+    val emailError: FieldError? = null,
+    val dateOfBirthError: FieldError? = null
 )
 
 sealed interface EditUiEvent {
@@ -45,6 +51,11 @@ sealed interface SaveError {
     data object FileNotFound: SaveError
     data object StorageFull: SaveError
     data object Unknown: SaveError
+}
+
+sealed interface FieldError {
+    data object EmptyField: FieldError
+    data object InvalidField: FieldError
 }
 
 @HiltViewModel
@@ -62,6 +73,14 @@ class EditCandidateViewModel @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun saveCandidate() {
         viewModelScope.launch {
+            if (!formIsValid(
+                    firstName = _editUiState.value.firstName.text.toString(),
+                    lastName = _editUiState.value.lastName.text.toString(),
+                    phone = _editUiState.value.phone.text.toString(),
+                    email = _editUiState.value.email.text.toString(),
+                    dateOfBirth = _editUiState.value.dateOfBirth
+                )) return@launch
+
             val currentState = _editUiState.value
             var finalPhoto: String? = null
 
@@ -116,4 +135,28 @@ class EditCandidateViewModel @Inject constructor(
     fun onPhotoChange(newUri: Uri?) {
         _editUiState.update { it.copy(photo = newUri) }
     }
+
+    private fun formIsValid(firstName: String, lastName:String, phone: String, email: String, dateOfBirth: LocalDate?): Boolean {
+        val newFirstNameError = validateNotBlank(firstName)
+        val newLastNameError = validateNotBlank(lastName)
+        val newPhoneError = validateNotBlank(phone)
+        val newEmailError = when {
+            email.isBlank() ->  FieldError.EmptyField
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> FieldError.InvalidField
+            else -> null
+        }
+        val newDateOfBirth = if (dateOfBirth == null) FieldError.EmptyField else null
+
+        _editUiState.update { it.copy(
+            firstNameError = newFirstNameError,
+            lastNameError = newLastNameError,
+            phoneError = newPhoneError,
+            emailError = newEmailError,
+            dateOfBirthError = newDateOfBirth
+        ) }
+
+        return newFirstNameError == null && newLastNameError == null && newPhoneError == null && newEmailError == null && newDateOfBirth == null
+    }
+
+    private fun validateNotBlank(text: String): FieldError? = if (text.isBlank()) FieldError.EmptyField else null
 }
