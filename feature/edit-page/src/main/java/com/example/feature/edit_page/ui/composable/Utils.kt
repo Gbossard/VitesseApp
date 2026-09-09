@@ -3,6 +3,8 @@ package com.example.feature.edit_page.ui.composable
 import android.os.Build
 import android.os.ext.SdkExtensions
 import androidx.annotation.RequiresApi
+import com.example.feature.edit_page.R
+import com.example.feature.edit_page.ui.screens.FieldError
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -19,4 +21,9 @@ fun Long.toLocalDate(): LocalDate {
         Instant.ofEpochMilli(this),
         ZoneId.systemDefault()
     ).toLocalDate()
+}
+
+fun FieldError.toErrorMessageRes(): Int = when (this) {
+    FieldError.EmptyField -> R.string.form_mandatory_field
+    FieldError.InvalidField -> R.string.form_invalid_format
 }
