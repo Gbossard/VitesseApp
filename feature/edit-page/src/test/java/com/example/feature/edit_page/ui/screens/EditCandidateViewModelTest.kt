@@ -16,6 +16,9 @@ import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,6 +49,13 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withNewPhoto_returnsSuccessState() = runTest {
+        val state = viewModel.editUiState.value
+        state.firstName.edit { append("Fake first Name") }
+        state.lastName.edit { append("Fake last Name") }
+        state.phone.edit { append("0606060606") }
+        state.email.edit { append("fake@gmail.com") }
+        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+
         val uri = mockk<Uri> {
             every { scheme } returns "content"
         }
@@ -68,6 +78,13 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withExistingPhoto_returnsSuccessState() = runTest {
+        val state = viewModel.editUiState.value
+        state.firstName.edit { append("Fake first Name") }
+        state.lastName.edit { append("Fake last Name") }
+        state.phone.edit { append("0606060606") }
+        state.email.edit { append("fake@gmail.com") }
+        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+
         val uri = mockk<Uri> {
             every { scheme } returns "file"
         }
@@ -87,6 +104,13 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withoutPhoto_returnsSuccessState() = runTest {
+        val state = viewModel.editUiState.value
+        state.firstName.edit { append("Fake first Name") }
+        state.lastName.edit { append("Fake last Name") }
+        state.phone.edit { append("0606060606") }
+        state.email.edit { append("fake@gmail.com") }
+        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+
         coEvery { repository.upsertCandidate(any()) } just Runs
 
         viewModel.events.test {
@@ -100,6 +124,13 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withNewPhoto_returnsFileNotFoundErrorState() = runTest {
+        val state = viewModel.editUiState.value
+        state.firstName.edit { append("Fake first Name") }
+        state.lastName.edit { append("Fake last Name") }
+        state.phone.edit { append("0606060606") }
+        state.email.edit { append("fake@gmail.com") }
+        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+
         val uri = mockk<Uri> {
             every { scheme } returns "content"
         }
@@ -119,6 +150,13 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withNewPhoto_returnsStorageFullErrorState() = runTest {
+        val state = viewModel.editUiState.value
+        state.firstName.edit { append("Fake first Name") }
+        state.lastName.edit { append("Fake last Name") }
+        state.phone.edit { append("0606060606") }
+        state.email.edit { append("fake@gmail.com") }
+        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+
         val uri = mockk<Uri> {
             every { scheme } returns "content"
         }
@@ -138,6 +176,13 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withNewPhoto_returnsUnknownErrorState() = runTest {
+        val state = viewModel.editUiState.value
+        state.firstName.edit { append("Fake first Name") }
+        state.lastName.edit { append("Fake last Name") }
+        state.phone.edit { append("0606060606") }
+        state.email.edit { append("fake@gmail.com") }
+        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+
         val uri = mockk<Uri> {
             every { scheme } returns "content"
         }
@@ -157,6 +202,13 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_returnsDatabaseErrorState() = runTest {
+        val state = viewModel.editUiState.value
+        state.firstName.edit { append("Fake first Name") }
+        state.lastName.edit { append("Fake last Name") }
+        state.phone.edit { append("0606060606") }
+        state.email.edit { append("fake@gmail.com") }
+        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+
         coEvery { repository.upsertCandidate(any()) } throws Exception("Error")
 
         viewModel.events.test {
@@ -179,4 +231,50 @@ class EditCandidateViewModelTest {
         assertEquals(uri, viewModel.editUiState.value.photo)
     }
 
+    @Test
+    fun formIsValid_returnEmptyFieldError() {
+        val firstName = ""
+        val lastName = ""
+        val phone = ""
+        val email = ""
+        val dateOfBirth = null
+        val result = viewModel.formIsValid(firstName, lastName, phone, email, dateOfBirth)
+
+        assertFalse(result)
+        assertEquals(FieldError.EmptyField, viewModel.editUiState.value.firstNameError)
+        assertEquals(FieldError.EmptyField, viewModel.editUiState.value.lastNameError)
+        assertEquals(FieldError.EmptyField, viewModel.editUiState.value.phoneError)
+        assertEquals(FieldError.EmptyField, viewModel.editUiState.value.emailError)
+        assertEquals(FieldError.EmptyField, viewModel.editUiState.value.dateOfBirthError)
+    }
+
+    @Test
+    fun formIsValid_returnInvalidFieldError() {
+        val firstName = "Fake FirstName"
+        val lastName = "Fake LastName"
+        val phone = "0606060606"
+        val email = "fake@email"
+        val dateOfBirth = LocalDate.of(2026,9,10)
+        val result = viewModel.formIsValid(firstName, lastName, phone, email, dateOfBirth)
+
+        assertFalse(result)
+        assertEquals(FieldError.InvalidField, viewModel.editUiState.value.emailError)
+    }
+
+    @Test
+    fun formIsValid_returnSuccess() {
+        val firstName = "Fake FirstName"
+        val lastName = "Fake LastName"
+        val phone = "0606060606"
+        val email = "fake@email.com"
+        val dateOfBirth = LocalDate.of(2026,9,10)
+        val result = viewModel.formIsValid(firstName, lastName, phone, email, dateOfBirth)
+
+        assertTrue(result)
+        assertNull(viewModel.editUiState.value.firstNameError)
+        assertNull(viewModel.editUiState.value.lastNameError)
+        assertNull(viewModel.editUiState.value.phoneError)
+        assertNull(viewModel.editUiState.value.emailError)
+        assertNull(viewModel.editUiState.value.dateOfBirthError)
+    }
 }
