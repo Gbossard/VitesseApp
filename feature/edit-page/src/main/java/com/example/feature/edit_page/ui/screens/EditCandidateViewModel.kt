@@ -2,7 +2,6 @@ package com.example.feature.edit_page.ui.screens
 
 import android.net.Uri
 import android.os.Build
-import android.util.Patterns
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
@@ -136,13 +135,13 @@ class EditCandidateViewModel @Inject constructor(
         _editUiState.update { it.copy(photo = newUri) }
     }
 
-    private fun formIsValid(firstName: String, lastName:String, phone: String, email: String, dateOfBirth: LocalDate?): Boolean {
+    fun formIsValid(firstName: String, lastName:String, phone: String, email: String, dateOfBirth: LocalDate?): Boolean {
         val newFirstNameError = validateNotBlank(firstName)
         val newLastNameError = validateNotBlank(lastName)
         val newPhoneError = validateNotBlank(phone)
         val newEmailError = when {
             email.isBlank() ->  FieldError.EmptyField
-            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> FieldError.InvalidField
+            !email.isValidEmail() -> FieldError.InvalidField
             else -> null
         }
         val newDateOfBirth = if (dateOfBirth == null) FieldError.EmptyField else null
@@ -159,4 +158,9 @@ class EditCandidateViewModel @Inject constructor(
     }
 
     private fun validateNotBlank(text: String): FieldError? = if (text.isBlank()) FieldError.EmptyField else null
+
+    private fun String.isValidEmail(): Boolean {
+        val emailRegex = Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+        return emailRegex.matches(this)
+    }
 }
