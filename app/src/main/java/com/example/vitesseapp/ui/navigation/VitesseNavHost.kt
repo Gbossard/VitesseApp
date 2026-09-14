@@ -14,7 +14,7 @@ fun VitesseNavHost() {
         composable<Home> {
             HomeScreen(
                 onFabClick = {
-                    navController.navigate(EditCandidate)
+                    navController.navigate(EditCandidate())
                 }
             )
         }

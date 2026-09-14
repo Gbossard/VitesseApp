@@ -107,7 +107,7 @@ fun EditCandidateScreen(
     }
     Scaffold(
         topBar = {
-            AppBar(onBackClick = onBackClick)
+            AppBar(onBackClick = onBackClick, isEditing = editUiState.isEditingMode)
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButtonPosition = FabPosition.Center,
@@ -406,12 +406,13 @@ fun DateSection(
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    isEditing: Boolean
 ) {
     TopAppBar(
         modifier = modifier,
         title = {
-            Text(text = stringResource(com.example.core.R.string.add_candidate))
+            Text(text = stringResource(if (isEditing) com.example.core.R.string.edit_candidate else com.example.core.R.string.add_candidate ))
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
@@ -432,7 +433,8 @@ fun AppBar(
 private fun AppBarPreview() {
     VitesseAppTheme {
         AppBar(
-            onBackClick = {}
+            onBackClick = {},
+            isEditing = false
         )
     }
 }
