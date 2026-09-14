@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="add_candidate">Ajouter un candidat</string>
+    <string name="edit_candidate">Modifier un candidat</string>
 
     <string name="form_phone_number">Téléphone</string>
     <string name="form_email">Email</string>
