@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.local.CandidateEntity
@@ -37,7 +38,8 @@ data class EditUiState(
     val lastNameError: FieldError? = null,
     val phoneError: FieldError? = null,
     val emailError: FieldError? = null,
-    val dateOfBirthError: FieldError? = null
+    val dateOfBirthError: FieldError? = null,
+    val isEditingMode: Boolean = false
 )
 
 sealed interface EditUiEvent {
@@ -59,15 +61,22 @@ sealed interface FieldError {
 
 @HiltViewModel
 class EditCandidateViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val candidateRepository: CandidateRepository,
     private val photoStorage: PhotoStorage
 ): ViewModel() {
-
+    private val candidateId: String? = savedStateHandle.get<String>("candidateId")
     private val _editUiState = MutableStateFlow(EditUiState())
     val editUiState: StateFlow<EditUiState> = _editUiState.asStateFlow()
 
     private val _events = Channel<EditUiEvent>()
     val events = _events.receiveAsFlow()
+
+    init {
+        if (candidateId != null) {
+            _editUiState.update { it.copy(isEditingMode = true) }
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun saveCandidate() {
