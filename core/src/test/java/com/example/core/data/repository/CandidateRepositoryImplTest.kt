@@ -107,6 +107,25 @@ class CandidateRepositoryImplTest {
     }
 
     @Test
+    fun getCandidateById_returnsDataFromDao() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        coEvery { candidateDao.getCandidateById("1") } returns candidate
+        assertEquals(candidate, candidateRepositoryImpl.getCandidateById("1"))
+        coVerify(exactly = 1) { candidateDao.getCandidateById("1") }
+    }
+
+    @Test
     fun upsertCandidate_saveCandidateToDao() = runTest {
         val candidate = CandidateEntity(
             id = "1",
