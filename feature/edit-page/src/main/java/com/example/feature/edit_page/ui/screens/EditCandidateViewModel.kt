@@ -23,6 +23,7 @@ import java.io.IOException
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 data class EditUiState(
     val firstName: TextFieldState = TextFieldState(),
@@ -86,7 +87,12 @@ class EditCandidateViewModel @Inject constructor(
                 firstName = TextFieldState(candidate.firstName),
                 lastName = TextFieldState(candidate.lastName),
                 phone = TextFieldState(candidate.phone),
-                email = TextFieldState(candidate.email)
+                email = TextFieldState(candidate.email),
+                dateOfBirth = candidate.dateOfBirth,
+                photo = candidate.photo?.toUri(),
+                salary = TextFieldState(candidate.salary.toString()),
+                notes = TextFieldState(candidate.notes),
+                isFavorite = candidate.isFavorite
             ) }
         }
     }
