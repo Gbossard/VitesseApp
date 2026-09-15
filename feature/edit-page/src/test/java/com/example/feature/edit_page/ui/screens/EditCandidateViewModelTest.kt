@@ -1,7 +1,9 @@
 package com.example.feature.edit_page.ui.screens
 
 import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.storage.PhotoStorage
 import com.example.core.testing.MainDispatcherRule
@@ -39,12 +41,79 @@ class EditCandidateViewModelTest {
 
     @MockK
     lateinit var photoStorage: PhotoStorage
+    private lateinit var  savedStateHandle: SavedStateHandle
 
     private lateinit var viewModel: EditCandidateViewModel
 
     @Before
     fun setUp() {
-        viewModel = EditCandidateViewModel(repository, photoStorage)
+        savedStateHandle = SavedStateHandle()
+        viewModel = EditCandidateViewModel(
+            savedStateHandle = savedStateHandle,
+            candidateRepository = repository,
+            photoStorage = photoStorage
+        )
+    }
+
+    @Test
+    fun init_withoutCandidateId() {
+        assertFalse(viewModel.editUiState.value.isEditingMode)
+
+        assertEquals("", viewModel.editUiState.value.firstName.text.toString())
+        assertEquals("", viewModel.editUiState.value.lastName.text.toString())
+        assertEquals("", viewModel.editUiState.value.phone.text.toString())
+        assertEquals("", viewModel.editUiState.value.email.text.toString())
+        assertEquals(null, viewModel.editUiState.value.dateOfBirth)
+        assertEquals(null, viewModel.editUiState.value.photo)
+        assertEquals("", viewModel.editUiState.value.salary.text.toString())
+        assertEquals("", viewModel.editUiState.value.notes.text.toString())
+
+        coVerify(exactly = 0) { repository.getCandidateById(any()) }
+    }
+
+    @Test
+    fun init_withCandidateId_loadCandidate() = runTest {
+        val candidateId = "123"
+        val candidate = CandidateEntity(
+            id = candidateId,
+            firstName = "Fake first Name",
+            lastName = "Fake last Name",
+            phone = "0606060606",
+            email = "fake@gmail.com",
+            dateOfBirth = LocalDate.of(2026, 1, 6),
+            photo = null,
+            salary = 35000,
+            notes = "",
+            isFavorite = true
+        )
+        coEvery { repository.getCandidateById(candidateId) } returns candidate
+
+        val editSavedState = SavedStateHandle(mapOf("candidateId" to candidateId))
+        val editViewModel = EditCandidateViewModel(
+            savedStateHandle = editSavedState,
+            candidateRepository = repository,
+            photoStorage = photoStorage
+        )
+
+        editViewModel.editUiState.test {
+            val initialState = awaitItem()
+            assertTrue(initialState.isEditingMode)
+            assertEquals("", initialState.firstName.text.toString())
+
+            val loadedState = awaitItem()
+            assertTrue(loadedState.isEditingMode)
+            assertEquals("Fake first Name", loadedState.firstName.text.toString())
+            assertEquals("Fake last Name",loadedState.lastName.text.toString())
+            assertEquals("0606060606", loadedState.phone.text.toString())
+            assertEquals("fake@gmail.com", loadedState.email.text.toString())
+            assertEquals(LocalDate.of(2026, 1, 6), loadedState.dateOfBirth)
+            assertEquals(null, loadedState.photo)
+            assertEquals("35000", loadedState.salary.text.toString())
+            assertEquals("", loadedState.notes.text.toString())
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(exactly = 1) { repository.getCandidateById(candidateId) }
     }
 
     @Test
