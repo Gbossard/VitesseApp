@@ -41,8 +41,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.getSelectedDate
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.setSelectedDate
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -74,6 +76,7 @@ import com.example.feature.edit_page.ui.composable.isEmbeddedPhotoPickerSupporte
 import com.example.feature.edit_page.ui.composable.toErrorMessageRes
 import com.example.feature.edit_page.ui.composable.toLocalDate
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @SuppressLint("LocalContextResourcesRead")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -158,6 +161,7 @@ fun EditCandidateScreen(
                 fieldError = editUiState.emailError
             )
             DateSection(
+                dateOfBirth = editUiState.dateOfBirth,
                 dateOfBirthError = editUiState.dateOfBirthError,
                 onDateOfBirthChange = { millis ->
                     viewModel.onDateOfBirthChange(millis?.toLocalDate())
@@ -361,13 +365,23 @@ fun InformationSection(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DateSection(
     modifier: Modifier = Modifier,
+    dateOfBirth: LocalDate?,
     dateOfBirthError: FieldError?,
     onDateOfBirthChange: (Long?) -> Unit
 ) {
-    val state = rememberDatePickerState(initialDisplayMode = DisplayMode.Input)
+    val state = rememberDatePickerState(
+        initialSelectedDate = dateOfBirth,
+        initialDisplayMode = DisplayMode.Input)
+
+    LaunchedEffect(dateOfBirth) {
+        if (state.getSelectedDate() != dateOfBirth) {
+            state.setSelectedDate(dateOfBirth)
+        }
+    }
 
     LaunchedEffect(state.selectedDateMillis) {
         onDateOfBirthChange(state.selectedDateMillis)
