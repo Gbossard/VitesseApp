@@ -75,6 +75,19 @@ class EditCandidateViewModel @Inject constructor(
     init {
         if (candidateId != null) {
             _editUiState.update { it.copy(isEditingMode = true) }
+            loadCandidate(candidateId)
+        }
+    }
+
+    fun loadCandidate(candidateId: String) {
+        viewModelScope.launch {
+            val candidate = candidateRepository.getCandidateById(candidateId) ?: return@launch
+            _editUiState.update { it.copy(
+                firstName = TextFieldState(candidate.firstName),
+                lastName = TextFieldState(candidate.lastName),
+                phone = TextFieldState(candidate.phone),
+                email = TextFieldState(candidate.email)
+            ) }
         }
     }
 
@@ -116,7 +129,7 @@ class EditCandidateViewModel @Inject constructor(
             }
 
             val candidate = CandidateEntity(
-                id = UUID.randomUUID().toString(),
+                id = candidateId ?: UUID.randomUUID().toString(),
                 firstName = currentState.firstName.text.toString(),
                 lastName = currentState.lastName.text.toString(),
                 phone = currentState.phone.text.toString(),
