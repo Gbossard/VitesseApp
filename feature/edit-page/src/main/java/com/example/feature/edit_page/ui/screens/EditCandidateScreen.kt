@@ -194,7 +194,10 @@ fun PhotoSection(
     onPhotoChange: (Uri?) -> Unit
 ) {
     var attachments by rememberSaveable { mutableStateOf(listOfNotNull(photoUri)) }
-    val currentPhoto = attachments.singleOrNull()
+
+    LaunchedEffect(photoUri) {
+        attachments = listOfNotNull(photoUri)
+    }
 
     val coroutineScope = rememberCoroutineScope()
     val bottomSheetState = rememberBottomSheetState(
@@ -205,8 +208,7 @@ fun PhotoSection(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
-            attachments = listOf(uri)
-            onPhotoChange(attachments.singleOrNull())
+            onPhotoChange(uri)
         }
     }
 
@@ -229,7 +231,7 @@ fun PhotoSection(
             .fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        if (currentPhoto == null) {
+        if (photoUri == null) {
             Image(
                 painter = painterResource(com.example.core.R.drawable.ic_empty_image_24dp),
                 contentDescription = stringResource(com.example.core.R.string.content_description_empty_image),
@@ -243,7 +245,7 @@ fun PhotoSection(
             )
         } else {
             AsyncImage(
-                model = currentPhoto,
+                model = photoUri,
                 contentDescription = stringResource(com.example.core.R.string.content_description_photo),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -258,12 +260,12 @@ fun PhotoSection(
         EmbeddedPhotoPickerModalBottomSheet(
             sheetState = bottomSheetState,
             onUriPermissionGranted = { uris ->
-                attachments += uris
-                onPhotoChange(attachments.singleOrNull())
+                attachments = (attachments + uris).distinct()
+                onPhotoChange(attachments.lastOrNull())
             },
             onUriPermissionRevoked = { uris ->
-                attachments -= uris
-                onPhotoChange(attachments.singleOrNull())
+                attachments = attachments.filterNot { it in uris }
+                onPhotoChange(attachments.lastOrNull())
             }
         )
     }
