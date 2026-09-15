@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -225,6 +226,33 @@ class CandidateDaoTest {
         candidateDao.upsertCandidate(candidate3)
         result = candidateDao.getAllFavorites("Dupont")
         assertEquals(1, result.first().size)
+    }
+
+    // getCandidateById
+    @Test
+    fun getCandidateById_returnsCandidate() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        candidateDao.upsertCandidate(candidate)
+
+        val result = candidateDao.getCandidateById("1")
+        assertEquals(candidate, result)
+    }
+
+    @Test
+    fun getCandidateById_whenCandidateDoesNotExist() = runTest {
+        val result = candidateDao.getCandidateById("1")
+        assertNull(result)
     }
 
     // upsertCandidate
