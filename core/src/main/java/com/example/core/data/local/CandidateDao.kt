@@ -21,6 +21,9 @@ interface CandidateDao {
     """)
     fun getAllFavorites(query: String): Flow<List<CandidateEntity>>
 
+    @Query("SELECT * FROM candidate_table WHERE id = :candidateId")
+    suspend fun getCandidateById(candidateId: String): CandidateEntity?
+
     @Upsert
     suspend fun upsertCandidate(candidate: CandidateEntity)
 }

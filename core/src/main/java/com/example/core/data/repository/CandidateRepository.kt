@@ -10,6 +10,8 @@ interface CandidateRepository {
 
     fun getAllFavorites(query: String): Flow<List<CandidateEntity>>
 
+    suspend fun getCandidateById(candidateId: String): CandidateEntity?
+
     suspend fun upsertCandidate(candidate: CandidateEntity)
 }
 
@@ -19,6 +21,8 @@ class CandidateRepositoryImpl @Inject constructor(
     override fun getAllCandidates(query: String): Flow<List<CandidateEntity>> = dao.getAllCandidates(query)
 
     override fun getAllFavorites(query: String): Flow<List<CandidateEntity>> = dao.getAllFavorites(query)
+
+    override suspend fun getCandidateById(candidateId: String): CandidateEntity? = dao.getCandidateById(candidateId)
 
     override suspend fun upsertCandidate(candidate: CandidateEntity) = dao.upsertCandidate(candidate)
 }
