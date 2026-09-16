@@ -32,6 +32,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -62,6 +63,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -297,11 +299,7 @@ fun NameSection(
                 state = firstName,
                 isError = firstNameError != null,
                 supportingText = {
-                    firstNameError?.let {
-                        Text(
-                            text = stringResource(it.toErrorMessageRes())
-                        )
-                    }
+                    Error(error = firstNameError)
                 },
                 lineLimits = TextFieldLineLimits.SingleLine,
                 label = { Text(stringResource(R.string.form_first_name)) }
@@ -313,11 +311,7 @@ fun NameSection(
                 state = lastName,
                 isError = lastNameError != null,
                 supportingText = {
-                    lastNameError?.let {
-                        Text(
-                            text = stringResource(it.toErrorMessageRes())
-                        )
-                    }
+                    Error(error = lastNameError)
                 },
                 lineLimits = TextFieldLineLimits.SingleLine,
                 label = { Text(stringResource(R.string.form_last_name)) }
@@ -354,11 +348,7 @@ fun InformationSection(
             state = state,
             isError = fieldError != null,
             supportingText = {
-                fieldError?.let {
-                    Text(
-                        text = stringResource(it.toErrorMessageRes())
-                    )
-                }
+                Error(error = fieldError)
             },
             lineLimits = lineLimits,
             keyboardOptions = keyboardOptions,
@@ -405,18 +395,31 @@ fun DateSection(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             DatePicker(state = state, focusRequester = null, modifier = Modifier.clip(shape = RoundedCornerShape(32.dp)))
-            if (dateOfBirthError != null) {
-                Text(
-                    text = stringResource(dateOfBirthError.toErrorMessageRes()),
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
+            Error(
+                error = dateOfBirthError,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 16.dp)
+            )
         }
-
     }
+}
 
+@Composable
+fun Error(
+    modifier: Modifier = Modifier,
+    error: FieldError?,
+    color: Color = Color.Unspecified,
+    style: TextStyle = LocalTextStyle.current
+) {
+    error?.let {
+        Text(
+            modifier = modifier,
+            text = stringResource(it.toErrorMessageRes()),
+            color = color,
+            style = style
+        )
+    }
 }
 
 @Composable
