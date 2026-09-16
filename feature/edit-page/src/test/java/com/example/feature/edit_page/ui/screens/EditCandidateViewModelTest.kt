@@ -116,18 +116,24 @@ class EditCandidateViewModelTest {
         coVerify(exactly = 1) { repository.getCandidateById(candidateId) }
     }
 
-    @Test
-    fun saveCandidate_withNewPhoto_returnsSuccessState() = runTest {
+    private fun fillValidForm() {
         val state = viewModel.editUiState.value
         state.firstName.edit { append("Fake first Name") }
         state.lastName.edit { append("Fake last Name") }
         state.phone.edit { append("0606060606") }
         state.email.edit { append("fake@gmail.com") }
         viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+    }
 
-        val uri = mockk<Uri> {
-            every { scheme } returns "content"
-        }
+    private fun mockkContentUri() = mockk<Uri> {
+        every { scheme } returns "content"
+    }
+
+    @Test
+    fun saveCandidate_withNewPhoto_returnsSuccessState() = runTest {
+        fillValidForm()
+
+        val uri = mockkContentUri()
 
         val savedUri = "file://candidate_123"
         viewModel.onPhotoChange(uri)
@@ -147,12 +153,7 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withExistingPhoto_returnsSuccessState() = runTest {
-        val state = viewModel.editUiState.value
-        state.firstName.edit { append("Fake first Name") }
-        state.lastName.edit { append("Fake last Name") }
-        state.phone.edit { append("0606060606") }
-        state.email.edit { append("fake@gmail.com") }
-        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+        fillValidForm()
 
         val uri = mockk<Uri> {
             every { scheme } returns "file"
@@ -173,12 +174,7 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withoutPhoto_returnsSuccessState() = runTest {
-        val state = viewModel.editUiState.value
-        state.firstName.edit { append("Fake first Name") }
-        state.lastName.edit { append("Fake last Name") }
-        state.phone.edit { append("0606060606") }
-        state.email.edit { append("fake@gmail.com") }
-        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+        fillValidForm()
 
         coEvery { repository.upsertCandidate(any()) } just Runs
 
@@ -193,16 +189,9 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withNewPhoto_returnsFileNotFoundErrorState() = runTest {
-        val state = viewModel.editUiState.value
-        state.firstName.edit { append("Fake first Name") }
-        state.lastName.edit { append("Fake last Name") }
-        state.phone.edit { append("0606060606") }
-        state.email.edit { append("fake@gmail.com") }
-        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+        fillValidForm()
 
-        val uri = mockk<Uri> {
-            every { scheme } returns "content"
-        }
+        val uri = mockkContentUri()
         viewModel.onPhotoChange(uri)
 
         coEvery { photoStorage.copyPhoto(uri) } returns Result.failure(FileNotFoundException())
@@ -219,16 +208,9 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withNewPhoto_returnsStorageFullErrorState() = runTest {
-        val state = viewModel.editUiState.value
-        state.firstName.edit { append("Fake first Name") }
-        state.lastName.edit { append("Fake last Name") }
-        state.phone.edit { append("0606060606") }
-        state.email.edit { append("fake@gmail.com") }
-        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+        fillValidForm()
 
-        val uri = mockk<Uri> {
-            every { scheme } returns "content"
-        }
+        val uri = mockkContentUri()
         viewModel.onPhotoChange(uri)
 
         coEvery { photoStorage.copyPhoto(uri) } returns Result.failure(IOException())
@@ -245,16 +227,9 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_withNewPhoto_returnsUnknownErrorState() = runTest {
-        val state = viewModel.editUiState.value
-        state.firstName.edit { append("Fake first Name") }
-        state.lastName.edit { append("Fake last Name") }
-        state.phone.edit { append("0606060606") }
-        state.email.edit { append("fake@gmail.com") }
-        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+        fillValidForm()
 
-        val uri = mockk<Uri> {
-            every { scheme } returns "content"
-        }
+        val uri = mockkContentUri()
         viewModel.onPhotoChange(uri)
 
         coEvery { photoStorage.copyPhoto(uri) } returns Result.failure(Exception())
@@ -271,12 +246,7 @@ class EditCandidateViewModelTest {
 
     @Test
     fun saveCandidate_returnsDatabaseErrorState() = runTest {
-        val state = viewModel.editUiState.value
-        state.firstName.edit { append("Fake first Name") }
-        state.lastName.edit { append("Fake last Name") }
-        state.phone.edit { append("0606060606") }
-        state.email.edit { append("fake@gmail.com") }
-        viewModel.onDateOfBirthChange(LocalDate.of(2026, 1, 6))
+        fillValidForm()
 
         coEvery { repository.upsertCandidate(any()) } throws Exception("Error")
 
