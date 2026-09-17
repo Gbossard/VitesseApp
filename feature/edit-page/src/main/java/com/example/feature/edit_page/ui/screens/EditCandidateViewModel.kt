@@ -82,7 +82,7 @@ class EditCandidateViewModel @Inject constructor(
         }
     }
 
-    fun loadCandidate(candidateId: String) {
+    private fun loadCandidate(candidateId: String) {
         viewModelScope.launch {
             val candidate = candidateRepository.getCandidateById(candidateId) ?: return@launch
             _editUiState.update { it.copy(
