@@ -2,8 +2,10 @@ package com.example.feature.edit_page.ui.screens
 
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +25,6 @@ import java.io.IOException
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
-import androidx.core.net.toUri
 
 data class EditUiState(
     val firstName: TextFieldState = TextFieldState(),
@@ -40,7 +41,8 @@ data class EditUiState(
     val phoneError: FieldError? = null,
     val emailError: FieldError? = null,
     val dateOfBirthError: FieldError? = null,
-    val isEditingMode: Boolean = false
+    val isEditingMode: Boolean = false,
+    val originalPhotoPath: String? = null
 )
 
 sealed interface EditUiEvent {
@@ -92,7 +94,8 @@ class EditCandidateViewModel @Inject constructor(
                 photo = candidate.photo?.toUri(),
                 salary = TextFieldState(candidate.salary.toString()),
                 notes = TextFieldState(candidate.notes),
-                isFavorite = candidate.isFavorite
+                isFavorite = candidate.isFavorite,
+                originalPhotoPath = candidate.photo
             ) }
         }
     }
@@ -148,6 +151,13 @@ class EditCandidateViewModel @Inject constructor(
             )
             try {
                 candidateRepository.upsertCandidate(candidate)
+                val oldPhoto = currentState.originalPhotoPath
+                if (oldPhoto != null && oldPhoto != finalPhoto) {
+                    photoStorage.deletePhoto(oldPhoto)
+                        .onFailure { exception ->
+                            Log.w("EditCandidateViewModel", "Error to delete old photo : $oldPhoto", exception)
+                        }
+                }
                 _events.send(EditUiEvent.SaveSuccess)
             } catch (_: Exception) {
                 _events.send(EditUiEvent.SaveErrorEvent(SaveError.DatabaseError))
