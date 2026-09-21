@@ -6,6 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.core.data.storage.PhotoStorage
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -22,6 +23,8 @@ class PhotoStorageTest {
         photoStorage = PhotoStorage(context)
     }
 
+
+    // Copy Photo
     @Test
     fun copyPhoto_returnsSuccess() = runTest {
         val file = File(context.cacheDir, "uri.jpg")
@@ -56,6 +59,47 @@ class PhotoStorageTest {
         val uri = Uri.parse("invalidUri://path")
 
         val result = photoStorage.copyPhoto(uri)
+
+        assertTrue(result.isFailure)
+    }
+
+
+    // Delete Photo
+    @Test
+    fun deletePhoto_isNullOrEmpty_returnsSuccess() = runTest {
+        val resultNull = photoStorage.deletePhoto(null)
+        val resultEmpty = photoStorage.deletePhoto("")
+
+        assertTrue(resultNull.isSuccess)
+        assertTrue(resultEmpty.isSuccess)
+    }
+
+    @Test
+    fun deletePhoto_fileNotFound_returnsSuccess() = runTest {
+        val file = File(context.filesDir, "fileNotFound.jpg")
+        val photoString = Uri.fromFile(file).toString()
+
+        val result = photoStorage.deletePhoto(photoString)
+        assertTrue(result.isSuccess)
+    }
+
+    @Test
+    fun deletePhoto_existingFile_deleteFileReturnsSuccess() = runTest {
+        val file = File(context.cacheDir, "uri.jpg")
+        file.writeText("Fake text")
+        val photoString = Uri.fromFile(file).toString()
+
+        val result = photoStorage.deletePhoto(photoString)
+
+        assertTrue(result.isSuccess)
+        assertFalse(file.exists())
+    }
+
+    @Test
+    fun deletePhoto_returnsError() = runTest {
+        val photoString = "invalidPathString://path"
+
+        val result = photoStorage.deletePhoto(photoString)
 
         assertTrue(result.isFailure)
     }
