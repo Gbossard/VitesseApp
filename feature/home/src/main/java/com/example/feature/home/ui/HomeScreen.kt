@@ -64,7 +64,7 @@ import java.time.LocalDate
 @Composable
 fun HomeScreen(
     onFabClick: () -> Unit,
-    onCandidateClick: () -> Unit,
+    onCandidateClick: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -158,7 +158,7 @@ fun HomeTabs(
     modifier: Modifier = Modifier,
     candidatesUiState: HomeUiState,
     favoritesUiState: HomeUiState,
-    onCandidateClick: () -> Unit,
+    onCandidateClick: (String) -> Unit,
 ) {
     var state by rememberSaveable { mutableIntStateOf(0) }
     val uiState = when (state) {
@@ -199,7 +199,7 @@ fun HomeTabs(
 fun CandidatesList(
     modifier: Modifier = Modifier,
     candidates: List<CandidateEntity>,
-    onCandidateClick: () -> Unit,
+    onCandidateClick: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -214,10 +214,10 @@ fun CandidatesList(
 fun CandidateItem(
     modifier: Modifier = Modifier,
     candidate: CandidateEntity,
-    onCandidateClick: () -> Unit,
+    onCandidateClick: (String) -> Unit,
 ) {
     Row(
-        modifier = modifier.clickable(onClick = { onCandidateClick() }).fillMaxWidth().padding(16.dp),
+        modifier = modifier.clickable(onClick = { onCandidateClick(candidate.id) }).fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (candidate.photo == null) {
