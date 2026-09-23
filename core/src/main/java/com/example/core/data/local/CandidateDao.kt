@@ -24,6 +24,9 @@ interface CandidateDao {
     @Query("SELECT * FROM candidate_table WHERE id = :candidateId")
     suspend fun getCandidateById(candidateId: String): CandidateEntity?
 
+    @Query("SELECT * FROM candidate_table WHERE id = :candidateId")
+    fun getCandidateByIdFlow(candidateId: String): Flow<CandidateEntity>
+
     @Upsert
     suspend fun upsertCandidate(candidate: CandidateEntity)
 }
