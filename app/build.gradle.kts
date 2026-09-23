@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":feature:home"))
     implementation(project(":feature:edit-page"))
+    implementation(project(":feature:details"))
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
