@@ -8,4 +8,4 @@ data object Home
 data class EditCandidate(val candidateId: String? = null)
 
 @Serializable
-data object DetailsCandidate
+data class DetailsCandidate(val candidateId: String)
