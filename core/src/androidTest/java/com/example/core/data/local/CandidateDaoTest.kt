@@ -255,6 +255,26 @@ class CandidateDaoTest {
         assertNull(result)
     }
 
+    // getCandidateByIdFlow
+    @Test
+    fun getCandidateByIdFlow_returnsCandidate() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        candidateDao.upsertCandidate(candidate)
+        val result = candidateDao.getCandidateByIdFlow("1")
+        assertEquals(candidate, result.first())
+    }
+
     // upsertCandidate
     @Test
     fun upsertCandidate_addCandidate() = runTest {
