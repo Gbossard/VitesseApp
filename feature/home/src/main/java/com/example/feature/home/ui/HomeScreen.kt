@@ -4,10 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -62,6 +64,7 @@ import java.time.LocalDate
 @Composable
 fun HomeScreen(
     onFabClick: () -> Unit,
+    onCandidateClick: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
@@ -89,6 +92,7 @@ fun HomeScreen(
             HomeTabs(
                 candidatesUiState = candidatesUiState,
                 favoritesUiState = favoritesUiState,
+                onCandidateClick = onCandidateClick
             )
         }
     }
@@ -153,7 +157,8 @@ fun HomeSearch(
 fun HomeTabs(
     modifier: Modifier = Modifier,
     candidatesUiState: HomeUiState,
-    favoritesUiState: HomeUiState
+    favoritesUiState: HomeUiState,
+    onCandidateClick: () -> Unit,
 ) {
     var state by rememberSaveable { mutableIntStateOf(0) }
     val uiState = when (state) {
@@ -181,7 +186,7 @@ fun HomeTabs(
             }
             is HomeUiState.Error -> {}
             is HomeUiState.Success -> {
-                CandidatesList(candidates = uiState.candidates)
+                CandidatesList(candidates = uiState.candidates, onCandidateClick = onCandidateClick)
             }
             is HomeUiState.Loading -> {
                 LoadingContent()
@@ -193,13 +198,14 @@ fun HomeTabs(
 @Composable
 fun CandidatesList(
     modifier: Modifier = Modifier,
-    candidates: List<CandidateEntity>
+    candidates: List<CandidateEntity>,
+    onCandidateClick: () -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
     ) {
         items(items = candidates, key = {it.id}) { candidate ->
-            CandidateItem(candidate = candidate)
+            CandidateItem(candidate = candidate, onCandidateClick = onCandidateClick)
         }
     }
 }
@@ -207,10 +213,11 @@ fun CandidatesList(
 @Composable
 fun CandidateItem(
     modifier: Modifier = Modifier,
-    candidate: CandidateEntity
+    candidate: CandidateEntity,
+    onCandidateClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier.clickable(onClick = { onCandidateClick() }).fillMaxWidth().padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (candidate.photo == null) {
@@ -283,7 +290,8 @@ fun CandidateItemPreview() {
                 photo = null,
                 salary = 100,
                 notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-            )
+            ),
+            onCandidateClick = {}
         )
     }
 }
