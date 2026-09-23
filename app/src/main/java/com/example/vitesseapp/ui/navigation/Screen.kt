@@ -6,3 +6,6 @@ import kotlinx.serialization.Serializable
 data object Home
 @Serializable
 data class EditCandidate(val candidateId: String? = null)
+
+@Serializable
+data object DetailsCandidate
