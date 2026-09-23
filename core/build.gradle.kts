@@ -39,6 +39,8 @@ dependencies {
     implementation(libs.androidx.sqlite.bundled)
     ksp(libs.androidx.room3.compiler)
 
+    debugImplementation(libs.androidx.compose.ui.tooling)
+
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
