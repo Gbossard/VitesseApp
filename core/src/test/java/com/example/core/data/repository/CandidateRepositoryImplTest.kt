@@ -30,6 +30,7 @@ class CandidateRepositoryImplTest {
         candidateRepositoryImpl = CandidateRepositoryImpl(candidateDao)
     }
 
+    // getAllCandidates
     @Test
     fun getAllCandidates_returnsDataFromDao() = runTest {
         val listOfCandidates = listOf(
@@ -74,6 +75,7 @@ class CandidateRepositoryImplTest {
         assertEquals(listOfCandidates, candidateRepositoryImpl.getAllCandidates("").first())
     }
 
+    // getAllFavorites
     @Test
     fun getAllFavorites_returnsDataFromDao() = runTest {
         val listOfFavorites = listOf(
@@ -106,6 +108,7 @@ class CandidateRepositoryImplTest {
         assertEquals(listOfFavorites, candidateRepositoryImpl.getAllFavorites("").first())
     }
 
+    // getCandidateById
     @Test
     fun getCandidateById_returnsDataFromDao() = runTest {
         val candidate = CandidateEntity(
@@ -125,6 +128,26 @@ class CandidateRepositoryImplTest {
         coVerify(exactly = 1) { candidateDao.getCandidateById("1") }
     }
 
+    // getCandidateByIdFlow
+    @Test
+    fun getCandidateByIdFlow_returnsDataFromDao() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        every { candidateDao.getCandidateByIdFlow("1") } returns flowOf(candidate)
+        assertEquals(candidate, candidateRepositoryImpl.getCandidateByIdFlow("1").first())
+    }
+
+    // upsertCandidate
     @Test
     fun upsertCandidate_saveCandidateToDao() = runTest {
         val candidate = CandidateEntity(
