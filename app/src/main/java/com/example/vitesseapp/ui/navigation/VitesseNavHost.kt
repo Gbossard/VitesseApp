@@ -37,6 +37,9 @@ fun VitesseNavHost() {
                 onBackClick = {
                     navController.popBackStack()
                 },
+                onEditClick = { candidateId ->
+                    navController.navigate(EditCandidate(candidateId))
+                }
             )
         }
     }

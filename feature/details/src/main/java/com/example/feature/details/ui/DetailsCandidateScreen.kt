@@ -25,6 +25,7 @@ import com.example.core.ui.theme.VitesseAppTheme
 fun DetailsCandidateScreen(
     viewModel: DetailsCandidateViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
+    onEditClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
@@ -32,10 +33,11 @@ fun DetailsCandidateScreen(
             if (uiState is DetailsCandidateUiState.Success) {
                 AppBar(
                     onBackClick = onBackClick,
+                    onFavoriteClick = { viewModel.toggleFavorite(candidateId = (uiState as DetailsCandidateUiState.Success).candidate.id)},
+                    onEditClick = { onEditClick((uiState as DetailsCandidateUiState.Success).candidate.id) },
                     firstName = (uiState as DetailsCandidateUiState.Success).candidate.firstName,
                     lastName = (uiState as DetailsCandidateUiState.Success).candidate.lastName,
                     isFavorite = (uiState as DetailsCandidateUiState.Success).candidate.isFavorite,
-                    onFavoriteClick = { viewModel.toggleFavorite(candidateId = (uiState as DetailsCandidateUiState.Success).candidate.id)}
                 )
             }
         },
@@ -59,6 +61,7 @@ fun AppBar(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
+    onEditClick: () -> Unit,
     firstName: String,
     lastName: String,
     isFavorite: Boolean,
@@ -83,6 +86,12 @@ fun AppBar(
                     contentDescription = stringResource(com.example.feature.details.R.string.favorites),
                 )
             }
+            IconButton(onClick = onEditClick) {
+                Icon(
+                    painter =  painterResource(R.drawable.ic_edit_24dp),
+                    contentDescription = stringResource(R.string.content_description_edit),
+                )
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
@@ -97,6 +106,7 @@ private fun AppBarPreview() {
         AppBar(
             onBackClick = {},
             onFavoriteClick = {},
+            onEditClick = {},
             firstName = "John",
             lastName = "Doe",
             isFavorite = true,
