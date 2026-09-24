@@ -83,7 +83,7 @@ fun AppBar(
             IconButton(onClick = onFavoriteClick) {
                 Icon(
                     painter = if (isFavorite) painterResource(com.example.feature.details.R.drawable.ic_star_fill_24dp) else painterResource(com.example.feature.details.R.drawable.ic_star_24dp),
-                    contentDescription = stringResource(com.example.feature.details.R.string.favorites),
+                    contentDescription = stringResource(com.example.feature.details.R.string.content_description_favorites),
                 )
             }
             IconButton(onClick = onEditClick) {
