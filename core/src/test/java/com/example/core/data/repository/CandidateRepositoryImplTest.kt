@@ -108,6 +108,26 @@ class CandidateRepositoryImplTest {
         assertEquals(listOfFavorites, candidateRepositoryImpl.getAllFavorites("").first())
     }
 
+    // toggleFavorite
+    @Test
+    fun toggleFavorite_returnsDataFromDao() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = true
+        )
+        coEvery { candidateDao.toggleFavorite(candidate.id) } just runs
+        candidateRepositoryImpl.toggleFavorite(candidate.id)
+        coVerify(exactly = 1) { candidateDao.toggleFavorite(candidate.id) }
+    }
+
     // getCandidateById
     @Test
     fun getCandidateById_returnsDataFromDao() = runTest {
