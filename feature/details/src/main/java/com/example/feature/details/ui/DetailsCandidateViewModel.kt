@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface DetailsCandidateUiState {
@@ -23,7 +24,7 @@ sealed interface DetailsCandidateUiState {
 @HiltViewModel
 class DetailsCandidateViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    candidateRepository: CandidateRepository
+    val candidateRepository: CandidateRepository
 ): ViewModel() {
     private val candidateId: String = checkNotNull(savedStateHandle.get<String>("candidateId"))
 
@@ -38,4 +39,10 @@ class DetailsCandidateViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = DetailsCandidateUiState.Loading
         )
+
+    fun toggleFavorite(candidateId: String) {
+        viewModelScope.launch {
+            candidateRepository.toggleFavorite(candidateId)
+        }
+    }
 }
