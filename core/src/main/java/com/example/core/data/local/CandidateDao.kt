@@ -21,6 +21,9 @@ interface CandidateDao {
     """)
     fun getAllFavorites(query: String): Flow<List<CandidateEntity>>
 
+    @Query("UPDATE candidate_table SET isFavorite = NOT isFavorite WHERE id = :candidateId")
+    suspend fun toggleFavorite(candidateId: String)
+
     @Query("SELECT * FROM candidate_table WHERE id = :candidateId")
     suspend fun getCandidateById(candidateId: String): CandidateEntity?
 
