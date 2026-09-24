@@ -35,6 +35,7 @@ fun DetailsCandidateScreen(
                     onBackClick = onBackClick,
                     onFavoriteClick = { viewModel.toggleFavorite(candidateId = (uiState as DetailsCandidateUiState.Success).candidate.id)},
                     onEditClick = { onEditClick((uiState as DetailsCandidateUiState.Success).candidate.id) },
+                    onDeleteClick = {},
                     firstName = (uiState as DetailsCandidateUiState.Success).candidate.firstName,
                     lastName = (uiState as DetailsCandidateUiState.Success).candidate.lastName,
                     isFavorite = (uiState as DetailsCandidateUiState.Success).candidate.isFavorite,
@@ -62,6 +63,7 @@ fun AppBar(
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
     onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     firstName: String,
     lastName: String,
     isFavorite: Boolean,
@@ -92,6 +94,12 @@ fun AppBar(
                     contentDescription = stringResource(R.string.content_description_edit),
                 )
             }
+            IconButton(onClick = onDeleteClick) {
+                Icon(
+                    painter =  painterResource(com.example.feature.details.R.drawable.ic_delete_24dp),
+                    contentDescription = stringResource(R.string.content_description_edit),
+                )
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
@@ -107,6 +115,7 @@ private fun AppBarPreview() {
             onBackClick = {},
             onFavoriteClick = {},
             onEditClick = {},
+            onDeleteClick = {},
             firstName = "John",
             lastName = "Doe",
             isFavorite = true,
