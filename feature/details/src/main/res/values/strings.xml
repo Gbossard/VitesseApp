@@ -1,3 +1,4 @@
 <resources>
     <string name="favorites">Favorites</string>
+    <string name="content_description_delete">Delete</string>
 </resources>
