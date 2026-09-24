@@ -33,7 +33,9 @@ fun DetailsCandidateScreen(
                 AppBar(
                     onBackClick = onBackClick,
                     firstName = (uiState as DetailsCandidateUiState.Success).candidate.firstName,
-                    lastName = (uiState as DetailsCandidateUiState.Success).candidate.lastName
+                    lastName = (uiState as DetailsCandidateUiState.Success).candidate.lastName,
+                    isFavorite = (uiState as DetailsCandidateUiState.Success).candidate.isFavorite,
+                    onFavoriteClick = { viewModel.toggleFavorite(candidateId = (uiState as DetailsCandidateUiState.Success).candidate.id)}
                 )
             }
         },
@@ -56,8 +58,10 @@ fun DetailsCandidateScreen(
 fun AppBar(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
+    onFavoriteClick: () -> Unit,
     firstName: String,
-    lastName: String
+    lastName: String,
+    isFavorite: Boolean,
 ) {
     TopAppBar(
         modifier = modifier,
@@ -69,6 +73,14 @@ fun AppBar(
                 Icon(
                     painter = painterResource(R.drawable.ic_arrow_back_24dp),
                     contentDescription = stringResource(R.string.content_description_back)
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = onFavoriteClick) {
+                Icon(
+                    painter = if (isFavorite) painterResource(com.example.feature.details.R.drawable.ic_star_fill_24dp) else painterResource(com.example.feature.details.R.drawable.ic_star_24dp),
+                    contentDescription = stringResource(com.example.feature.details.R.string.favorites),
                 )
             }
         },
@@ -84,8 +96,10 @@ private fun AppBarPreview() {
     VitesseAppTheme {
         AppBar(
             onBackClick = {},
+            onFavoriteClick = {},
             firstName = "John",
-            lastName = "Doe"
+            lastName = "Doe",
+            isFavorite = true,
         )
     }
 }
