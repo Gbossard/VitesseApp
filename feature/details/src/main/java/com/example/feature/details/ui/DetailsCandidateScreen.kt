@@ -114,7 +114,7 @@ fun AppBar(
             IconButton(onClick = onDeleteClick) {
                 Icon(
                     painter =  painterResource(com.example.feature.details.R.drawable.ic_delete_24dp),
-                    contentDescription = stringResource(R.string.content_description_edit),
+                    contentDescription = stringResource(com.example.feature.details.R.string.content_description_delete),
                 )
             }
         },
