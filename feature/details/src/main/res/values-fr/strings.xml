@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="deletion">Suppression</string>
+    <string name="dialog_text_delete">Etes-vous sûr de vouloir supprimer ce candidat? Cette action est irréversible.</string>
+    <string name="dialog_button_confirm">Confirmer</string>
+    <string name="dialog_button_cancel">Annuler</string>
+
     <string name="content_description_favorites">Favoris</string>
     <string name="content_description_delete">Supprimer</string>
 </resources>
