@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
+import com.example.core.data.storage.PhotoStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,7 +25,8 @@ sealed interface DetailsCandidateUiState {
 @HiltViewModel
 class DetailsCandidateViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    val candidateRepository: CandidateRepository
+    private val candidateRepository: CandidateRepository,
+    private val photoStorage: PhotoStorage
 ): ViewModel() {
     private val candidateId: String = checkNotNull(savedStateHandle.get<String>("candidateId"))
 
@@ -49,6 +51,7 @@ class DetailsCandidateViewModel @Inject constructor(
     fun deleteCandidate(candidate: CandidateEntity) {
         viewModelScope.launch {
             candidateRepository.deleteCandidate(candidate)
+            candidate.photo.let { photoStorage.deletePhoto(it) }
         }
     }
 }
