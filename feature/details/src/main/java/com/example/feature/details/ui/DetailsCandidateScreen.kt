@@ -33,17 +33,20 @@ fun DetailsCandidateScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val openDialog = rememberSaveable { mutableStateOf(false) }
+    val state = uiState
     Scaffold(
         topBar = {
-            if (uiState is DetailsCandidateUiState.Success) {
+
+            if (state is DetailsCandidateUiState.Success) {
+                val candidate = state.candidate
                 AppBar(
                     onBackClick = onBackClick,
-                    onFavoriteClick = { viewModel.toggleFavorite(candidateId = (uiState as DetailsCandidateUiState.Success).candidate.id)},
-                    onEditClick = { onEditClick((uiState as DetailsCandidateUiState.Success).candidate.id) },
+                    onFavoriteClick = { viewModel.toggleFavorite(candidateId = candidate.id)},
+                    onEditClick = { onEditClick(candidate.id) },
                     onDeleteClick = { openDialog.value = !openDialog.value },
-                    firstName = (uiState as DetailsCandidateUiState.Success).candidate.firstName,
-                    lastName = (uiState as DetailsCandidateUiState.Success).candidate.lastName,
-                    isFavorite = (uiState as DetailsCandidateUiState.Success).candidate.isFavorite,
+                    firstName = candidate.firstName,
+                    lastName = candidate.lastName,
+                    isFavorite = candidate.isFavorite,
                 )
             }
         },
@@ -60,13 +63,13 @@ fun DetailsCandidateScreen(
             }
         }
 
-        if (openDialog.value) {
+        if (openDialog.value && state is DetailsCandidateUiState.Success) {
             DeleteDialog(
                 onDismissRequest = {
                     openDialog.value = false
                 },
                 onConfirmation = {
-                    viewModel.deleteCandidate((uiState as DetailsCandidateUiState.Success).candidate)
+                    viewModel.deleteCandidate(state.candidate)
                     onBackClick()
                 }
             )
