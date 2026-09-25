@@ -40,7 +40,7 @@ class DetailsCandidateViewModel @Inject constructor(
             initialValue = DetailsCandidateUiState.Loading
         )
 
-    fun toggleFavorite(candidateId: String) {
+    fun toggleFavorite() {
         viewModelScope.launch {
             candidateRepository.toggleFavorite(candidateId)
         }

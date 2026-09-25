@@ -41,7 +41,7 @@ fun DetailsCandidateScreen(
                 val candidate = state.candidate
                 AppBar(
                     onBackClick = onBackClick,
-                    onFavoriteClick = { viewModel.toggleFavorite(candidateId = candidate.id)},
+                    onFavoriteClick = { viewModel.toggleFavorite() },
                     onEditClick = { onEditClick(candidate.id) },
                     onDeleteClick = { openDialog.value = !openDialog.value },
                     firstName = candidate.firstName,
