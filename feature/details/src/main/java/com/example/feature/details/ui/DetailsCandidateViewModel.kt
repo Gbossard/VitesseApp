@@ -45,4 +45,10 @@ class DetailsCandidateViewModel @Inject constructor(
             candidateRepository.toggleFavorite(candidateId)
         }
     }
+
+    fun deleteCandidate(candidate: CandidateEntity) {
+        viewModelScope.launch {
+            candidateRepository.deleteCandidate(candidate)
+        }
+    }
 }
