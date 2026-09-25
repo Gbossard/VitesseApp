@@ -17,6 +17,8 @@ interface CandidateRepository {
     fun getCandidateByIdFlow(candidateId: String): Flow<CandidateEntity>
 
     suspend fun upsertCandidate(candidate: CandidateEntity)
+
+    suspend fun deleteCandidate(candidate: CandidateEntity)
 }
 
 class CandidateRepositoryImpl @Inject constructor(
@@ -33,4 +35,6 @@ class CandidateRepositoryImpl @Inject constructor(
     override fun getCandidateByIdFlow(candidateId: String): Flow<CandidateEntity> = dao.getCandidateByIdFlow(candidateId)
 
     override suspend fun upsertCandidate(candidate: CandidateEntity) = dao.upsertCandidate(candidate)
+
+    override suspend fun deleteCandidate(candidate: CandidateEntity) = dao.deleteCandidate(candidate)
 }
