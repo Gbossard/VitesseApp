@@ -370,4 +370,29 @@ class CandidateDaoTest {
         assertEquals(1, result.first().size)
         assertEquals(updatedCandidate, result.first().first())
     }
+
+    // deleteCandidate
+    @Test
+    fun deleteCandidate() = runTest {
+        val candidate = CandidateEntity(
+            id = "1",
+            firstName = "Fake first name",
+            lastName = "Fake last name",
+            phone = "0606060606",
+            email = "fake.email@fake.com",
+            dateOfBirth = LocalDate.parse("1992-06-20"),
+            photo = null,
+            salary = 0,
+            notes = "fake note",
+            isFavorite = false
+        )
+        result = candidateDao.getAllCandidates("")
+        assertEquals(0, result.first().size)
+
+        candidateDao.upsertCandidate(candidate)
+        assertEquals(1, result.first().size)
+
+        candidateDao.deleteCandidate(candidate)
+        assertEquals(0, result.first().size)
+    }
 }
