@@ -28,7 +28,11 @@ fun VitesseNavHost() {
                     navController.popBackStack()
                 },
                 onSaveClick = {
-                    navController.navigate(Home)
+                    navController.navigate(Home) {
+                        popUpTo<Home> {
+                            inclusive = false
+                        }
+                    }
                 }
             )
         }
