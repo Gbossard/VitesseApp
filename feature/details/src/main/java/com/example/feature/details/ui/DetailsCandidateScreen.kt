@@ -2,15 +2,19 @@ package com.example.feature.details.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,6 +32,7 @@ fun DetailsCandidateScreen(
     onEditClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val openDialog = rememberSaveable { mutableStateOf(false) }
     Scaffold(
         topBar = {
             if (uiState is DetailsCandidateUiState.Success) {
@@ -35,7 +40,7 @@ fun DetailsCandidateScreen(
                     onBackClick = onBackClick,
                     onFavoriteClick = { viewModel.toggleFavorite(candidateId = (uiState as DetailsCandidateUiState.Success).candidate.id)},
                     onEditClick = { onEditClick((uiState as DetailsCandidateUiState.Success).candidate.id) },
-                    onDeleteClick = {},
+                    onDeleteClick = { openDialog.value = !openDialog.value },
                     firstName = (uiState as DetailsCandidateUiState.Success).candidate.firstName,
                     lastName = (uiState as DetailsCandidateUiState.Success).candidate.lastName,
                     isFavorite = (uiState as DetailsCandidateUiState.Success).candidate.isFavorite,
@@ -53,6 +58,18 @@ fun DetailsCandidateScreen(
                     LoadingContent()
                 }
             }
+        }
+
+        if (openDialog.value) {
+            DeleteDialog(
+                onDismissRequest = {
+                    openDialog.value = false
+                },
+                onConfirmation = {
+                    viewModel.deleteCandidate((uiState as DetailsCandidateUiState.Success).candidate)
+                    onBackClick()
+                }
+            )
         }
     }
 }
@@ -104,6 +121,39 @@ fun AppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary
         )
+    )
+}
+
+@Composable
+fun DeleteDialog(
+    modifier: Modifier = Modifier,
+    onDismissRequest: () -> Unit,
+    onConfirmation: () -> Unit
+) {
+    AlertDialog(
+        modifier = modifier,
+        title = {
+            Text(text = stringResource(com.example.feature.details.R.string.deletion))
+        },
+        text = {
+            Text(text = stringResource(com.example.feature.details.R.string.dialog_text_delete))
+        },
+        onDismissRequest = onDismissRequest,
+        confirmButton = {
+            TextButton(
+                onClick = onConfirmation
+            ) {
+                Text(text = stringResource(com.example.feature.details.R.string.dialog_button_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismissRequest
+            ) {
+                Text(text = stringResource(com.example.feature.details.R.string.dialog_button_cancel))
+
+            }
+        }
     )
 }
 
