@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -33,14 +35,14 @@ fun PhotoContent(
 ) {
     val isClickable = onClick != null
 
-    Box(
-        modifier = modifier
-            .padding(16.dp)
-            .aspectRatio(3f / 2f)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        if (photo == null) {
+    if (photo == null) {
+        Box(
+            modifier = modifier
+                .padding(16.dp)
+                .aspectRatio(3f / 2f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
             Image(
                 painter = painterResource(R.drawable.ic_empty_image_24dp),
                 contentDescription = stringResource(R.string.content_description_empty_image),
@@ -55,11 +57,30 @@ fun PhotoContent(
                     ),
                 colorFilter = ColorFilter.tint(Color.Gray)
             )
-        } else {
+        }
+    } else {
+        Box(
+            modifier = modifier
+                .padding(16.dp)
+                .aspectRatio(3f / 2f)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            AsyncImage(
+                model = photo,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(32.dp))
+                    .blur(16.dp)
+                    .alpha(0.8f)
+            )
+
             AsyncImage(
                 model = photo,
                 contentDescription = stringResource(R.string.content_description_photo),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(shape = RoundedCornerShape(32.dp))
@@ -67,6 +88,7 @@ fun PhotoContent(
                         enabled = isClickable,
                         onClick = onClick
                     )
+
             )
         }
     }
