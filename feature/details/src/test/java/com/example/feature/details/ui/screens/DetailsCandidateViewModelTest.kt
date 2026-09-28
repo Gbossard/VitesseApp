@@ -101,11 +101,13 @@ class DetailsCandidateViewModelTest {
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
             assertEquals(DetailsCandidateUiState.Success(candidate), awaitItem())
-            viewModel.toggleFavorite()
-            advanceUntilIdle()
-            coVerify(exactly = 1) { repository.toggleFavorite(candidateId)}
             cancelAndIgnoreRemainingEvents()
         }
+
+        viewModel.toggleFavorite()
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { repository.toggleFavorite(candidateId)}
     }
 
     @Test
