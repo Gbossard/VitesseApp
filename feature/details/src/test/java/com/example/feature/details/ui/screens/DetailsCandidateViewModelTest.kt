@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
+import com.example.core.data.storage.PhotoStorage
 import com.example.core.testing.MainDispatcherRule
 import com.example.feature.details.ui.DetailsCandidateUiState
 import com.example.feature.details.ui.DetailsCandidateViewModel
@@ -34,6 +35,9 @@ class DetailsCandidateViewModelTest {
     val mockkRule = MockKRule(this)
 
     @MockK
+    lateinit var photoStorage: PhotoStorage
+
+    @MockK
     lateinit var repository: CandidateRepository
 
     private val candidateId = "1"
@@ -54,7 +58,8 @@ class DetailsCandidateViewModelTest {
         val savedStateHandle = SavedStateHandle(mapOf("candidateId" to candidateId))
         return DetailsCandidateViewModel(
             savedStateHandle = savedStateHandle,
-            candidateRepository = repository
+            candidateRepository = repository,
+            photoStorage = photoStorage
         )
     }
 
@@ -104,20 +109,24 @@ class DetailsCandidateViewModelTest {
     }
 
     @Test
-    fun deleteCandidate_callsRepositoryDelete() = runTest {
+    fun deleteCandidate_clearsDataFromRepositoryAndStorage() = runTest {
         every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
         coEvery { repository.deleteCandidate(candidate) } just runs
+        coEvery { photoStorage.deletePhoto(candidate.photo) } returns Result.success(Unit)
 
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
             assertEquals(DetailsCandidateUiState.Success(candidate), awaitItem())
-            viewModel.deleteCandidate(candidate)
-            advanceUntilIdle()
-            coVerify(exactly = 1) { repository.deleteCandidate(candidate) }
             cancelAndIgnoreRemainingEvents()
         }
+
+        viewModel.deleteCandidate(candidate)
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { repository.deleteCandidate(candidate) }
+        coVerify(exactly = 1) { photoStorage.deletePhoto(candidate.photo) }
     }
 
 }
