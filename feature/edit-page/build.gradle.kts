@@ -27,9 +27,6 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":core:testing"))
 
-    // Coil
-    implementation(libs.coil.compose)
-
     // Photo Picker
     implementation(libs.androidx.photopicker.compose)
 
