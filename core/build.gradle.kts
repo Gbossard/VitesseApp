@@ -30,6 +30,9 @@ dependencies {
     api(libs.androidx.compose.material3)
     api(libs.androidx.compose.ui.tooling.preview)
 
+    // Coil
+    implementation(libs.coil.compose)
+
     // Hilt
     api(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

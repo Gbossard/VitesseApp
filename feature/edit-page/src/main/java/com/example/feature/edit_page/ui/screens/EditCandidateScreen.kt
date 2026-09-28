@@ -7,15 +7,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -58,8 +52,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -70,7 +62,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.photopicker.compose.ExperimentalPhotoPickerComposeApi
-import coil3.compose.AsyncImage
+import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.edit_page.R
 import com.example.feature.edit_page.ui.composable.EmbeddedPhotoPickerModalBottomSheet
@@ -226,37 +218,10 @@ fun PhotoSection(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .padding(16.dp)
-            .aspectRatio(2f / 1f)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        if (photoUri == null) {
-            Image(
-                painter = painterResource(com.example.core.R.drawable.ic_empty_image_24dp),
-                contentDescription = stringResource(com.example.core.R.string.content_description_empty_image),
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(32.dp))
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .background(Color.LightGray)
-                    .clickable(onClick = { onPhotoPickerClick() }),
-                colorFilter = ColorFilter.tint(Color.Gray)
-            )
-        } else {
-            AsyncImage(
-                model = photoUri,
-                contentDescription = stringResource(com.example.core.R.string.content_description_photo),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(32.dp))
-                    .clickable(onClick = { onPhotoPickerClick() })
-            )
-        }
-    }
+    PhotoContent(
+        photo = photoUri,
+        onClick = { onPhotoPickerClick() }
+    )
 
     if (isEmbeddedPhotoPickerSupported() && bottomSheetState.isVisible) {
         EmbeddedPhotoPickerModalBottomSheet(
