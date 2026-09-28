@@ -1,7 +1,11 @@
 package com.example.feature.details.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,8 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.R
+import com.example.core.data.local.CandidateEntity
 import com.example.core.ui.composable.LoadingContent
+import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
+import java.time.LocalDate
 
 @Composable
 fun DetailsCandidateScreen(
@@ -51,15 +58,17 @@ fun DetailsCandidateScreen(
             }
         },
     ) { innerPadding ->
-        Column(
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            when (uiState) {
-                is DetailsCandidateUiState.Error -> {}
-                is DetailsCandidateUiState.Success -> {}
-                is DetailsCandidateUiState.Loading -> {
-                    LoadingContent()
-                }
+        when (state) {
+            is DetailsCandidateUiState.Error -> {}
+            is DetailsCandidateUiState.Success -> {
+                DetailsContent(
+                    modifier = Modifier.padding(innerPadding),
+                    candidate = state.candidate
+                )
+            }
+
+            is DetailsCandidateUiState.Loading -> {
+                LoadingContent()
             }
         }
 
@@ -74,6 +83,20 @@ fun DetailsCandidateScreen(
                 }
             )
         }
+    }
+}
+
+@Composable
+fun DetailsContent(
+    modifier: Modifier = Modifier,
+    candidate: CandidateEntity
+) {
+    Column(
+        modifier = modifier.verticalScroll(rememberScrollState())
+    ) {
+        PhotoContent(
+            photo = candidate.photo
+        )
     }
 }
 
@@ -158,6 +181,28 @@ fun DeleteDialog(
             }
         }
     )
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+private fun DetailsContentPreview() {
+    VitesseAppTheme {
+        DetailsContent(
+            candidate = CandidateEntity(
+                id = "1",
+                firstName = "Jean",
+                lastName = "Dupont",
+                phone = "0601020304",
+                email = "jean.dupont@gmail.com",
+                dateOfBirth = LocalDate.parse("1992-06-20"),
+                photo = null,
+                salary = 45000,
+                notes = "Available now",
+                isFavorite = true
+            )
+        )
+    }
 }
 
 @Preview
