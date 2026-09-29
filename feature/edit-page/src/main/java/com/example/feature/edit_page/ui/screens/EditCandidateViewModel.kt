@@ -1,9 +1,7 @@
 package com.example.feature.edit_page.ui.screens
 
 import android.net.Uri
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
@@ -100,7 +98,6 @@ class EditCandidateViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun saveCandidate() {
         viewModelScope.launch {
             if (!formIsValid(

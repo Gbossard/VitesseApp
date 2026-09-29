@@ -2,7 +2,6 @@ package com.example.feature.edit_page.ui.composable
 
 import android.os.Build
 import android.os.ext.SdkExtensions
-import androidx.annotation.RequiresApi
 import com.example.feature.edit_page.R
 import com.example.feature.edit_page.ui.screens.FieldError
 import java.time.Instant
@@ -15,7 +14,6 @@ fun isEmbeddedPhotoPickerSupported(): Boolean {
         SdkExtensions.getExtensionVersion(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) >= 15
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun Long.toLocalDate(): LocalDate {
     return LocalDateTime.ofInstant(
         Instant.ofEpochMilli(this),

@@ -73,7 +73,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @SuppressLint("LocalContextResourcesRead")
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EditCandidateScreen(
     viewModel: EditCandidateViewModel = hiltViewModel(),
@@ -322,7 +321,7 @@ fun InformationSection(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("NewApi")
 @Composable
 fun DateSection(
     modifier: Modifier = Modifier,
