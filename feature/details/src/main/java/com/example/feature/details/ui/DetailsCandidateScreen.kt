@@ -3,10 +3,13 @@ package com.example.feature.details.ui
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,9 +23,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.R
@@ -31,6 +37,9 @@ import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
 import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun DetailsCandidateScreen(
@@ -96,6 +105,61 @@ fun DetailsContent(
     ) {
         PhotoContent(
             photo = candidate.photo
+        )
+        InformationContent(
+            dateOfBirth = candidate.dateOfBirth
+        )
+    }
+}
+
+
+@Composable
+fun InformationContent(
+    modifier: Modifier = Modifier,
+    dateOfBirth: LocalDate
+) {
+    val dateFormatter = DateTimeFormatter
+        .ofLocalizedDate(FormatStyle.SHORT)
+        .withLocale(LocalLocale.current.platformLocale)
+    val formattedDate = dateOfBirth.format(dateFormatter)
+    val age = Period.between(dateOfBirth, LocalDate.now()).years
+
+    Column(modifier = modifier.padding(16.dp)) {
+        CardContent(
+            title = stringResource(com.example.feature.details.R.string.headline_about),
+            subhead = "$formattedDate ${stringResource(id = com.example.feature.details.R.string.subhead_years, age)}",
+            body = stringResource(com.example.feature.details.R.string.body_birthday)
+        )
+    }
+}
+
+@Composable
+fun CardContent(
+    modifier: Modifier = Modifier,
+    title: String,
+    subhead: String?,
+    body: String
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer),
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(16.dp)
+        )
+        if (subhead != null) {
+            Text(
+                text = subhead,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
+            )
+        }
+        Text(
+            text = body,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontSize = 12.sp,
         )
     }
 }
