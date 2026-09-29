@@ -25,12 +25,13 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":core:testing"))
 
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    testImplementation(project(":core:testing"))
 
     androidTestImplementation(libs.androidx.junit)
 }
