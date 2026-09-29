@@ -17,6 +17,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -37,4 +38,6 @@ dependencies {
     testImplementation(project(":core:testing"))
 
     androidTestImplementation(libs.androidx.junit)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }
