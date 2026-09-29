@@ -4,6 +4,8 @@
     <string name="dialog_button_confirm">Confirm</string>
     <string name="dialog_button_cancel">Cancel</string>
 
+    <string name="call_button">Call</string>
+
     <string name="headline_about">About</string>
     <string name="subhead_years">(%1$s years old)</string>
     <string name="body_birthday">Birthday</string>
