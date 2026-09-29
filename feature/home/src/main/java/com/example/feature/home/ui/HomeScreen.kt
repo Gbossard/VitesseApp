@@ -217,7 +217,10 @@ fun CandidateItem(
     onCandidateClick: (String) -> Unit,
 ) {
     Row(
-        modifier = modifier.clickable(onClick = { onCandidateClick(candidate.id) }).fillMaxWidth().padding(16.dp),
+        modifier = modifier
+            .clickable(onClick = { onCandidateClick(candidate.id) })
+            .fillMaxWidth()
+            .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (candidate.photo == null) {
@@ -246,7 +249,7 @@ fun CandidateItem(
             modifier = Modifier.padding(start = 16.dp)
         ) {
             Text(
-                text = candidate.firstName + " " + candidate.lastName.uppercase(),
+                text = "${candidate.firstName} ${candidate.lastName.uppercase()}",
                 fontWeight = FontWeight.Medium
             )
             Text(

@@ -114,7 +114,7 @@ fun AppBar(
     TopAppBar(
         modifier = modifier,
         title = {
-            Text(text = firstName + " " + lastName.uppercase())
+            Text(text = "$firstName ${lastName.uppercase()}")
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
