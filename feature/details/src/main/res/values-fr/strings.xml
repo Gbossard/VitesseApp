@@ -5,6 +5,10 @@
     <string name="dialog_button_confirm">Confirmer</string>
     <string name="dialog_button_cancel">Annuler</string>
 
+    <string name="headline_about">A propos</string>
+    <string name="subhead_years">(%1$s ans)</string>
+    <string name="body_birthday">Anniversaire</string>
+
     <string name="content_description_favorites">Favoris</string>
     <string name="content_description_delete">Supprimer</string>
 </resources>
