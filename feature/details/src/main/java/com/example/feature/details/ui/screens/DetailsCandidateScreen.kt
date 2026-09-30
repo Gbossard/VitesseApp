@@ -47,6 +47,7 @@ import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.details.ui.util.dialPhoneNumber
+import com.example.feature.details.ui.util.openEmail
 import com.example.feature.details.ui.util.openSms
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -129,6 +130,7 @@ fun DetailsContent(
         )
         ContactContent(
             phone = candidate.phone,
+            email = candidate.email,
             onError = onErrorContact
         )
         InformationContent(dateOfBirth = candidate.dateOfBirth)
@@ -139,6 +141,7 @@ fun DetailsContent(
 fun ContactContent(
     modifier: Modifier = Modifier,
     phone: String,
+    email: String,
     onError: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -158,6 +161,11 @@ fun ContactContent(
             iconRes = com.example.feature.details.R.drawable.ic_chat_24dp,
             textRes = com.example.feature.details.R.string.sms_button,
             onClick = {context.openSms(phone, onError = onError)}
+        )
+        ContactItem(
+            iconRes = R.drawable.ic_mail_24dp,
+            textRes = com.example.feature.details.R.string.email_button,
+            onClick = {context.openEmail(email, onError = onError)}
         )
     }
 }

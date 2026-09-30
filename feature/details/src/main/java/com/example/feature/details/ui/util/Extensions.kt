@@ -29,6 +29,17 @@ fun Context.openSms(phone: String, onError: (String) -> Unit) {
     )
 }
 
+fun Context.openEmail(email: String, onError: (String) -> Unit) {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
+        data = "mailto:$email".toUri()
+    }
+    startActivitySafe(
+        intent = intent,
+        errorResId = R.string.email_no_apps_error,
+        onError = onError
+    )
+}
+
 fun Context.startActivitySafe(
     intent: Intent,
     @StringRes errorResId: Int,
