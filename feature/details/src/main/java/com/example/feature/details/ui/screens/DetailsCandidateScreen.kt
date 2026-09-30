@@ -1,7 +1,5 @@
 package com.example.feature.details.ui.screens
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -133,7 +131,10 @@ fun DetailsContent(
             email = candidate.email,
             onError = onErrorContact
         )
-        InformationContent(dateOfBirth = candidate.dateOfBirth)
+        InformationContent(
+            dateOfBirth = candidate.dateOfBirth,
+            notes = candidate.notes
+        )
     }
 }
 
@@ -202,7 +203,8 @@ fun ContactItem(
 @Composable
 fun InformationContent(
     modifier: Modifier = Modifier,
-    dateOfBirth: LocalDate
+    dateOfBirth: LocalDate,
+    notes: String
 ) {
     val dateFormatter = DateTimeFormatter
         .ofLocalizedDate(FormatStyle.SHORT)
@@ -216,6 +218,10 @@ fun InformationContent(
             subhead = "$formattedDate ${stringResource(id = com.example.feature.details.R.string.subhead_years, age)}",
             body = stringResource(com.example.feature.details.R.string.body_birthday)
         )
+        CardContent(
+            title = stringResource(com.example.feature.details.R.string.headline_notes),
+            body = notes
+        )
     }
 }
 
@@ -223,11 +229,11 @@ fun InformationContent(
 fun CardContent(
     modifier: Modifier = Modifier,
     title: String,
-    subhead: String?,
+    subhead: String? = null,
     body: String
 ) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().padding(bottom = 16.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer),
     ) {
         Text(
@@ -333,29 +339,39 @@ fun DeleteDialog(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
-private fun DetailsContentPreview() {
+private fun PhotoContentPreview() {
     VitesseAppTheme {
-        DetailsContent(
-            candidate = CandidateEntity(
-                id = "1",
-                firstName = "Jean",
-                lastName = "Dupont",
-                phone = "0601020304",
-                email = "jean.dupont@gmail.com",
-                dateOfBirth = LocalDate.parse("1992-06-20"),
-                photo = null,
-                salary = 45000,
-                notes = "Available now",
-                isFavorite = true
-            ),
-            onErrorContact = {}
+        PhotoContent(
+            photo = null
         )
     }
 }
 
+@Preview
+@Composable
+private fun ContactContentPreview() {
+    VitesseAppTheme {
+        InformationContent(
+            dateOfBirth = LocalDate.of(2026, 7, 21),
+            notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        )
+    }
+}
+
+
+@Preview
+@Composable
+private fun CardContentPreview() {
+    VitesseAppTheme {
+        CardContent(
+            title = "Title",
+            subhead = "Subhead",
+            body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+        )
+    }
+}
 @Preview
 @Composable
 private fun AppBarPreview() {
