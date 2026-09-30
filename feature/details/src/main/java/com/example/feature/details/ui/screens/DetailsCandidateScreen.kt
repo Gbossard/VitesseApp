@@ -47,6 +47,7 @@ import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.details.ui.util.dialPhoneNumber
+import com.example.feature.details.ui.util.openSms
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
@@ -152,6 +153,11 @@ fun ContactContent(
             iconRes = R.drawable.ic_call_24dp,
             textRes = com.example.feature.details.R.string.call_button,
             onClick = {context.dialPhoneNumber(phone, onError = onError)}
+        )
+        ContactItem(
+            iconRes = com.example.feature.details.R.drawable.ic_chat_24dp,
+            textRes = com.example.feature.details.R.string.sms_button,
+            onClick = {context.openSms(phone, onError = onError)}
         )
     }
 }
