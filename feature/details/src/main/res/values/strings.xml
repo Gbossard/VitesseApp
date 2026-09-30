@@ -5,6 +5,7 @@
     <string name="dialog_button_cancel">Cancel</string>
 
     <string name="call_button">Call</string>
+    <string name="call_no_apps_error">No apps are available to make a call.</string>
 
     <string name="headline_about">About</string>
     <string name="subhead_years">(%1$s years old)</string>
