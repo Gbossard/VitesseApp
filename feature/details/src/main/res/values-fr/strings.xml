@@ -8,6 +8,9 @@
     <string name="call_button">Appel</string>
     <string name="call_no_apps_error">Aucune application disponible pour passer un appel.</string>
 
+    <string name="sms_button">SMS</string>
+    <string name="sms_no_apps_error">Aucune application disponible pour envoyer un SMS.</string>
+
     <string name="headline_about">A propos</string>
     <string name="subhead_years">(%1$s ans)</string>
     <string name="body_birthday">Anniversaire</string>
