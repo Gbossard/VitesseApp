@@ -1,4 +1,4 @@
-package com.example.feature.details.ui
+package com.example.feature.details.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
