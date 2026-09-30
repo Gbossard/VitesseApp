@@ -18,6 +18,8 @@
     <string name="subhead_years">(%1$s ans)</string>
     <string name="body_birthday">Anniversaire</string>
 
+    <string name="headline_notes">Notes</string>
+
     <string name="content_description_favorites">Favoris</string>
     <string name="content_description_delete">Supprimer</string>
 </resources>

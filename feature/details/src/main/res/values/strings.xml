@@ -17,6 +17,8 @@
     <string name="subhead_years">(%1$s years old)</string>
     <string name="body_birthday">Birthday</string>
 
+    <string name="headline_notes">Notes</string>
+
     <string name="content_description_favorites">Favorites</string>
     <string name="content_description_delete">Delete</string>
 </resources>
