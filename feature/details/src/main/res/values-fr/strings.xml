@@ -11,6 +11,9 @@
     <string name="sms_button">SMS</string>
     <string name="sms_no_apps_error">Aucune application disponible pour envoyer un SMS.</string>
 
+    <string name="email_button">E-mail</string>
+    <string name="email_no_apps_error">Aucune application disponible pour envoyer un e-mail.</string>
+
     <string name="headline_about">A propos</string>
     <string name="subhead_years">(%1$s ans)</string>
     <string name="body_birthday">Anniversaire</string>
