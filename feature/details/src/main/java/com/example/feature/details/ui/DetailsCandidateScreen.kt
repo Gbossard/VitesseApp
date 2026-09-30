@@ -2,10 +2,14 @@ package com.example.feature.details.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
@@ -22,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.painterResource
@@ -106,8 +111,52 @@ fun DetailsContent(
         PhotoContent(
             photo = candidate.photo
         )
-        InformationContent(
-            dateOfBirth = candidate.dateOfBirth
+        ContactContent()
+        InformationContent(dateOfBirth = candidate.dateOfBirth)
+    }
+}
+
+@Composable
+fun ContactContent(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ContactItem(
+            iconRes = R.drawable.ic_call_24dp,
+            textRes = com.example.feature.details.R.string.call_button,
+            onClick = {}
+        )
+    }
+}
+
+@Composable
+fun ContactItem(
+    modifier: Modifier = Modifier,
+    iconRes: Int,
+    textRes: Int,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = modifier.padding(horizontal = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        IconButton(
+            modifier = Modifier
+                .border(2.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
+            onClick = onClick
+        ) {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = stringResource(textRes)
+            )
+        }
+        Text(
+            text = stringResource(textRes),
+            fontSize = 12.sp,
         )
     }
 }
