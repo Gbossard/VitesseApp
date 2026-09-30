@@ -6,8 +6,6 @@ import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.storage.PhotoStorage
 import com.example.core.testing.MainDispatcherRule
-import com.example.feature.details.ui.DetailsCandidateUiState
-import com.example.feature.details.ui.DetailsCandidateViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
