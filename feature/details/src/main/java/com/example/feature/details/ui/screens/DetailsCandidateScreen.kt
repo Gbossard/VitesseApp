@@ -18,6 +18,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -25,9 +27,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +46,8 @@ import com.example.core.data.local.CandidateEntity
 import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
+import com.example.feature.details.ui.util.dialPhoneNumber
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
@@ -55,6 +62,9 @@ fun DetailsCandidateScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val openDialog = rememberSaveable { mutableStateOf(false) }
     val state = uiState
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
         topBar = {
 
@@ -71,13 +81,17 @@ fun DetailsCandidateScreen(
                 )
             }
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         when (state) {
             is DetailsCandidateUiState.Error -> {}
             is DetailsCandidateUiState.Success -> {
                 DetailsContent(
                     modifier = Modifier.padding(innerPadding),
-                    candidate = state.candidate
+                    candidate = state.candidate,
+                    onErrorContact = { message ->
+                        scope.launch { snackbarHostState.showSnackbar(message) }
+                    }
                 )
             }
 
@@ -103,7 +117,8 @@ fun DetailsCandidateScreen(
 @Composable
 fun DetailsContent(
     modifier: Modifier = Modifier,
-    candidate: CandidateEntity
+    candidate: CandidateEntity,
+    onErrorContact: (String) -> Unit
 ) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState())
@@ -111,13 +126,21 @@ fun DetailsContent(
         PhotoContent(
             photo = candidate.photo
         )
-        ContactContent()
+        ContactContent(
+            phone = candidate.phone,
+            onError = onErrorContact
+        )
         InformationContent(dateOfBirth = candidate.dateOfBirth)
     }
 }
 
 @Composable
-fun ContactContent(modifier: Modifier = Modifier) {
+fun ContactContent(
+    modifier: Modifier = Modifier,
+    phone: String,
+    onError: (String) -> Unit
+) {
+    val context = LocalContext.current
     Row(
         modifier = modifier
             .padding(horizontal = 16.dp)
@@ -128,7 +151,7 @@ fun ContactContent(modifier: Modifier = Modifier) {
         ContactItem(
             iconRes = R.drawable.ic_call_24dp,
             textRes = com.example.feature.details.R.string.call_button,
-            onClick = {}
+            onClick = {context.dialPhoneNumber(phone, onError = onError)}
         )
     }
 }
@@ -313,7 +336,8 @@ private fun DetailsContentPreview() {
                 salary = 45000,
                 notes = "Available now",
                 isFavorite = true
-            )
+            ),
+            onErrorContact = {}
         )
     }
 }
