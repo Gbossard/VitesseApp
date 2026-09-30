@@ -10,6 +10,9 @@
     <string name="sms_button">SMS</string>
     <string name="sms_no_apps_error">No apps are available to send an SMS.</string>
 
+    <string name="email_button">E-mail</string>
+    <string name="email_no_apps_error">No apps are available to send an e-mail.</string>
+
     <string name="headline_about">About</string>
     <string name="subhead_years">(%1$s years old)</string>
     <string name="body_birthday">Birthday</string>
