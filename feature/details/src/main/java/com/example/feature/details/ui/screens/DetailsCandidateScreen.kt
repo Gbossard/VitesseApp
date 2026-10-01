@@ -133,7 +133,8 @@ fun DetailsContent(
         )
         InformationContent(
             dateOfBirth = candidate.dateOfBirth,
-            notes = candidate.notes
+            notes = candidate.notes,
+            salary = candidate.salary
         )
     }
 }
@@ -204,7 +205,8 @@ fun ContactItem(
 fun InformationContent(
     modifier: Modifier = Modifier,
     dateOfBirth: LocalDate,
-    notes: String
+    notes: String,
+    salary: Int
 ) {
     val dateFormatter = DateTimeFormatter
         .ofLocalizedDate(FormatStyle.SHORT)
@@ -217,6 +219,11 @@ fun InformationContent(
             title = stringResource(com.example.feature.details.R.string.headline_about),
             subhead = "$formattedDate ${stringResource(id = com.example.feature.details.R.string.subhead_years, age)}",
             body = stringResource(com.example.feature.details.R.string.body_birthday)
+        )
+        CardContent(
+            title = stringResource(com.example.feature.details.R.string.headline_expected_salary),
+            subhead = stringResource(id = com.example.feature.details.R.string.subhead_euros, salary),
+            body = stringResource(com.example.feature.details.R.string.body_pounds, salary)
         )
         CardContent(
             title = stringResource(com.example.feature.details.R.string.headline_notes),
@@ -355,7 +362,8 @@ private fun ContactContentPreview() {
     VitesseAppTheme {
         InformationContent(
             dateOfBirth = LocalDate.of(2026, 7, 21),
-            notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            salary = 50000
         )
     }
 }
