@@ -17,6 +17,10 @@
     <string name="subhead_years">(%1$s years old)</string>
     <string name="body_birthday">Birthday</string>
 
+    <string name="headline_expected_salary">Expected Salary</string>
+    <string name="subhead_euros">%1$s €</string>
+    <string name="body_pounds">or £ %1$s</string>
+
     <string name="headline_notes">Notes</string>
 
     <string name="content_description_favorites">Favorites</string>
