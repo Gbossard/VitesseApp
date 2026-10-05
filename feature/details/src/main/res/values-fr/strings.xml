@@ -22,6 +22,10 @@
     <string name="subhead_euros">%1$s €</string>
     <string name="body_pounds">soit £ %1$s</string>
 
+    <string name="error_salary_network">Impossible d\'obtenir le taux : vérifiez votre connexion réseau</string>
+    <string name="error_salary_rate_not_found">Taux de conversion GBP indisponible pour le moment</string>
+    <string name="error_salary_unknown">Une erreur est survenue lors de la conversion</string>
+
     <string name="headline_notes">Notes</string>
 
     <string name="content_description_favorites">Favoris</string>

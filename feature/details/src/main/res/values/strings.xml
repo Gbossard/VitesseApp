@@ -21,6 +21,10 @@
     <string name="subhead_euros">%1$s €</string>
     <string name="body_pounds">or £ %1$s</string>
 
+    <string name="error_salary_network">Unable to get exchange rate: please check your network connection</string>
+    <string name="error_salary_rate_not_found">GBP exchange rate currently unavailable</string>
+    <string name="error_salary_unknown">An error occurred during currency conversion</string>
+
     <string name="headline_notes">Notes</string>
 
     <string name="content_description_favorites">Favorites</string>
