@@ -2,6 +2,8 @@ package com.example.core.data.repository
 
 import com.example.core.data.local.CandidateDao
 import com.example.core.data.local.CandidateEntity
+import com.example.core.data.network.CurrencyApiService
+import com.example.core.data.network.CurrencyResponseData
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -13,6 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,11 +26,14 @@ class CandidateRepositoryImplTest {
     val mockkRule = MockKRule(this)
     @MockK
     lateinit var candidateDao: CandidateDao
+
+    @MockK
+    lateinit var currencyApiService: CurrencyApiService
     private lateinit var candidateRepositoryImpl: CandidateRepositoryImpl
 
     @Before
     fun setUp() {
-        candidateRepositoryImpl = CandidateRepositoryImpl(candidateDao)
+        candidateRepositoryImpl = CandidateRepositoryImpl(candidateDao, currencyApiService)
     }
 
     private val candidate = CandidateEntity(
@@ -173,5 +179,46 @@ class CandidateRepositoryImplTest {
 
         candidateRepositoryImpl.deleteCandidate(candidate)
         coVerify(exactly = 1) { candidateDao.deleteCandidate(candidate)}
+    }
+
+    // convertSalaryToGbp
+    @Test
+    fun convertSalaryToGbp_returnsSuccess() = runTest {
+        val salaryInEuros = 50000
+        val currency = CurrencyResponseData(
+            date = "2026-10-05",
+            rates = mapOf("gbp" to 0.85)
+        )
+        coEvery { currencyApiService.getEuroExchangeRates() } returns currency
+
+        val result = candidateRepositoryImpl.convertSalaryToGbp(salaryInEuros)
+
+        assertTrue(result.isSuccess)
+        assertEquals(42500.0, result.getOrNull()!!, 0.01)
+        coVerify(exactly = 1) { currencyApiService.getEuroExchangeRates() }
+    }
+
+    @Test
+    fun convertSalaryToGbp_returnsFailureWithNoSuchElementException() = runTest {
+        val salaryInEuros = 50000
+        val currency = CurrencyResponseData(
+            date = "2026-10-05",
+            rates = mapOf("usd" to 1.1)
+        )
+        coEvery { currencyApiService.getEuroExchangeRates() } returns currency
+
+        val result = candidateRepositoryImpl.convertSalaryToGbp(salaryInEuros)
+        assertTrue(result.isFailure)
+        assertTrue(result.exceptionOrNull() is NoSuchElementException)
+    }
+
+    @Test
+    fun convertSalaryToGbp_returnsFailure() = runTest {
+        val salaryInEuros = 50000
+        coEvery { currencyApiService.getEuroExchangeRates() } throws Exception("Network error")
+
+        val result = candidateRepositoryImpl.convertSalaryToGbp(salaryInEuros)
+        assertTrue(result.isFailure)
+        assertEquals("Network error", result.exceptionOrNull()?.message)
     }
 }
