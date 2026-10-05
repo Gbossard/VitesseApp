@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.core.net.toUri
 import com.example.feature.details.R
+import com.example.feature.details.ui.screens.SalaryError
 
 fun Context.dialPhoneNumber(phone: String, onError: (String) -> Unit) {
     val intent = Intent(Intent.ACTION_DIAL).apply {
@@ -50,4 +51,10 @@ fun Context.startActivitySafe(
     } catch (_: ActivityNotFoundException) {
         onError(getString(errorResId))
     }
+}
+
+fun SalaryError.toErrorMessageRes(): Int = when (this) {
+    SalaryError.NetworkError -> R.string.error_salary_network
+    SalaryError.RateNotFound -> R.string.error_salary_rate_not_found
+    SalaryError.Unknown -> R.string.error_salary_unknown
 }
