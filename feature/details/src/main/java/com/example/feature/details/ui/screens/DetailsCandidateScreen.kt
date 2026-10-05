@@ -47,6 +47,7 @@ import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.details.ui.util.dialPhoneNumber
 import com.example.feature.details.ui.util.openEmail
 import com.example.feature.details.ui.util.openSms
+import com.example.feature.details.ui.util.toErrorMessageRes
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
@@ -91,7 +92,9 @@ fun DetailsCandidateScreen(
                     candidate = state.candidate,
                     onErrorContact = { message ->
                         scope.launch { snackbarHostState.showSnackbar(message) }
-                    }
+                    },
+                    salaryInGbp = state.salaryInGbp,
+                    salaryError = state.salaryError
                 )
             }
 
@@ -118,7 +121,9 @@ fun DetailsCandidateScreen(
 fun DetailsContent(
     modifier: Modifier = Modifier,
     candidate: CandidateEntity,
-    onErrorContact: (String) -> Unit
+    onErrorContact: (String) -> Unit,
+    salaryInGbp: Double?,
+    salaryError: SalaryError?
 ) {
     Column(
         modifier = modifier.verticalScroll(rememberScrollState())
@@ -134,7 +139,9 @@ fun DetailsContent(
         InformationContent(
             dateOfBirth = candidate.dateOfBirth,
             notes = candidate.notes,
-            salary = candidate.salary
+            salary = candidate.salary,
+            salaryInGbp = salaryInGbp,
+            salaryError = salaryError
         )
     }
 }
@@ -206,13 +213,24 @@ fun InformationContent(
     modifier: Modifier = Modifier,
     dateOfBirth: LocalDate,
     notes: String,
-    salary: Int
+    salary: Int,
+    salaryInGbp: Double?,
+    salaryError: SalaryError?
 ) {
     val dateFormatter = DateTimeFormatter
         .ofLocalizedDate(FormatStyle.SHORT)
         .withLocale(LocalLocale.current.platformLocale)
     val formattedDate = dateOfBirth.format(dateFormatter)
     val age = Period.between(dateOfBirth, LocalDate.now()).years
+
+    val salaryGbpText = when {
+        salaryInGbp != null -> stringResource(
+            id = com.example.feature.details.R.string.body_pounds,
+            String.format(LocalLocale.current.platformLocale, "%.2f", salaryInGbp)
+        )
+        salaryError != null -> stringResource(salaryError.toErrorMessageRes())
+        else -> null
+    }
 
     Column(modifier = modifier.padding(16.dp)) {
         CardContent(
@@ -223,7 +241,7 @@ fun InformationContent(
         CardContent(
             title = stringResource(com.example.feature.details.R.string.headline_expected_salary),
             subhead = stringResource(id = com.example.feature.details.R.string.subhead_euros, salary),
-            body = stringResource(com.example.feature.details.R.string.body_pounds, salary)
+            body = salaryGbpText
         )
         CardContent(
             title = stringResource(com.example.feature.details.R.string.headline_notes),
@@ -237,7 +255,7 @@ fun CardContent(
     modifier: Modifier = Modifier,
     title: String,
     subhead: String? = null,
-    body: String
+    body: String? = null
 ) {
     Card(
         modifier = modifier.fillMaxWidth().padding(bottom = 16.dp),
@@ -254,12 +272,14 @@ fun CardContent(
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)
             )
         }
-        Text(
-            text = body,
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            fontSize = 12.sp,
-        )
+        body?.let {
+            Text(
+                text = body,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 12.sp,
+            )
+        }
     }
 }
 
@@ -363,7 +383,9 @@ private fun ContactContentPreview() {
         InformationContent(
             dateOfBirth = LocalDate.of(2026, 7, 21),
             notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            salary = 50000
+            salary = 50000,
+            salaryInGbp = 20.2,
+            salaryError = SalaryError.NetworkError,
         )
     }
 }
