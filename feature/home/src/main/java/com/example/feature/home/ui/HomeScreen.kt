@@ -174,7 +174,7 @@ fun HomeTabs(
             titles.forEachIndexed { index, title ->
                 Tab(
                     selected = state == index,
-                    unselectedContentColor = Color.Unspecified,
+                    unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                     onClick = { state = index },
                     text = { Text(text = title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
                 )
