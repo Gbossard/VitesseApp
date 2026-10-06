@@ -21,6 +21,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
+import java.io.IOException
 import java.time.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -63,13 +64,14 @@ class DetailsCandidateViewModelTest {
 
     @Test
     fun getUiState_returnsSuccessState() = runTest {
+        coEvery { repository.convertSalaryToGbp(any()) } returns Result.success(42500.0)
         every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
 
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
-            assertEquals(DetailsCandidateUiState.Success(candidate), awaitItem())
+            assertEquals(DetailsCandidateUiState.Success(candidate, 42500.0, null), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -90,7 +92,50 @@ class DetailsCandidateViewModelTest {
     }
 
     @Test
+    fun getUiState_returnsSuccessState_withNetworkError() = runTest {
+        coEvery { repository.convertSalaryToGbp(any()) } returns Result.failure(IOException())
+        every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.test {
+            assertEquals(DetailsCandidateUiState.Loading, awaitItem())
+            assertEquals(DetailsCandidateUiState.Success(candidate, null, SalaryError.NetworkError), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun getUiState_returnsSuccessState_withRateNotFoundError() = runTest {
+        coEvery { repository.convertSalaryToGbp(any()) } returns Result.failure(NoSuchElementException())
+        every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.test {
+            assertEquals(DetailsCandidateUiState.Loading, awaitItem())
+            assertEquals(DetailsCandidateUiState.Success(candidate, null, SalaryError.RateNotFound), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun getUiState_returnsSuccessState_withUnknownError() = runTest {
+        coEvery { repository.convertSalaryToGbp(any()) } returns Result.failure(RuntimeException("Error"))
+        every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.test {
+            assertEquals(DetailsCandidateUiState.Loading, awaitItem())
+            assertEquals(DetailsCandidateUiState.Success(candidate, null, SalaryError.Unknown), awaitItem())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun toggleFavorite_callsRepositoryFavorite() = runTest {
+        coEvery { repository.convertSalaryToGbp(any()) } returns Result.success(42500.0)
         every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
         coEvery { repository.toggleFavorite(candidateId) } just runs
 
@@ -98,7 +143,7 @@ class DetailsCandidateViewModelTest {
 
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
-            assertEquals(DetailsCandidateUiState.Success(candidate), awaitItem())
+            assertEquals(DetailsCandidateUiState.Success(candidate, 42500.0, null), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
 
@@ -110,6 +155,7 @@ class DetailsCandidateViewModelTest {
 
     @Test
     fun deleteCandidate_clearsDataFromRepositoryAndStorage() = runTest {
+        coEvery { repository.convertSalaryToGbp(any()) } returns Result.success(42500.0)
         every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
         coEvery { repository.deleteCandidate(candidate) } just runs
         coEvery { photoStorage.deletePhoto(candidate.photo) } returns Result.success(Unit)
@@ -118,7 +164,7 @@ class DetailsCandidateViewModelTest {
 
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
-            assertEquals(DetailsCandidateUiState.Success(candidate), awaitItem())
+            assertEquals(DetailsCandidateUiState.Success(candidate, 42500.0, null), awaitItem())
             cancelAndIgnoreRemainingEvents()
         }
 
