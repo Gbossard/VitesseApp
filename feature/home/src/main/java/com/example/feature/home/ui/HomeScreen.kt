@@ -13,12 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.AppBarWithSearch
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -26,15 +29,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSearchBarState
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -44,10 +46,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,7 +62,6 @@ import com.example.core.data.local.CandidateEntity
 import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.home.R
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @Composable
@@ -105,9 +108,8 @@ fun HomeSearch(
     query: String,
     onQueryChange: (String) -> Unit
 ) {
-    val searchBarState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState(initialText = query)
-    val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(textFieldState) {
         snapshotFlow { textFieldState.text }
@@ -115,41 +117,43 @@ fun HomeSearch(
                 onQueryChange(newQuery.toString())
             }
     }
-    val inputField =
-        @Composable {
-            SearchBarDefaults.InputField(
-                textFieldState = textFieldState,
-                searchBarState = searchBarState,
-                onSearch = { scope.launch { searchBarState.animateToCollapsed() } },
-                placeholder = {
-                    Text(
-                        modifier = Modifier.clearAndSetSemantics {},
-                        text = stringResource(R.string.search_bar)
-                    )
-                },
-                trailingIcon = {
-                    if (textFieldState.text.isNotEmpty()) {
-                        IconButton(onClick = {
-                            textFieldState.clearText()
-                        }) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_close_24dp),
-                                contentDescription = stringResource(R.string.content_description_delete_query)
-                            )
-                        }
-                    } else {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_search_24dp),
-                            contentDescription = stringResource(R.string.search_bar)
-                        )
-                    }
-                },
+
+    TextField(
+        state = textFieldState,
+        modifier = modifier
+            .fillMaxWidth()
+            .statusBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        lineLimits = TextFieldLineLimits.SingleLine,
+        shape = CircleShape,
+        colors = TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+        ),
+        placeholder = {
+            Text(
+                modifier = Modifier.clearAndSetSemantics {},
+                text = stringResource(R.string.search_bar)
             )
-        }
-    AppBarWithSearch(
-        state = searchBarState,
-        inputField = inputField,
-        modifier = modifier,
+        },
+        trailingIcon = {
+            if (textFieldState.text.isNotEmpty()) {
+                IconButton(onClick = { textFieldState.clearText() }) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_close_24dp),
+                        contentDescription = stringResource(R.string.content_description_delete_query)
+                    )
+                }
+            } else {
+                Icon(
+                    painter = painterResource(R.drawable.ic_search_24dp),
+                    contentDescription = stringResource(R.string.search_bar)
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        onKeyboardAction = { keyboardController?.hide() },
     )
 }
 
