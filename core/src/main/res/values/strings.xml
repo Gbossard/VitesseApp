@@ -14,4 +14,6 @@
     <string name="content_description_email">Email address</string>
     <string name="content_description_salary">Salary</string>
     <string name="content_description_edit">Edit</string>
+
+    <string name="content_description_error_content">Error Image</string>
 </resources>
