@@ -41,6 +41,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.R
 import com.example.core.data.local.CandidateEntity
+import com.example.core.ui.composable.ErrorContent
 import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
@@ -85,7 +86,11 @@ fun DetailsCandidateScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         when (state) {
-            is DetailsCandidateUiState.Error -> {}
+            is DetailsCandidateUiState.Error -> {
+                ErrorContent(
+                    message = com.example.feature.details.R.string.error_content_load_candidate
+                )
+            }
             is DetailsCandidateUiState.Success -> {
                 DetailsContent(
                     modifier = Modifier.padding(innerPadding),
