@@ -6,4 +6,6 @@
     <string name="empty_list_candidate">No candidate</string>
 
     <string name="content_description_delete_query">Delete the query</string>
+
+    <string name="error_content_load_candidates">Failed to load candidates</string>
 </resources>
