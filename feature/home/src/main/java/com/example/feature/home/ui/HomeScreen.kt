@@ -59,6 +59,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.core.data.local.CandidateEntity
+import com.example.core.ui.composable.ErrorContent
 import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.home.R
@@ -188,7 +189,11 @@ fun HomeTabs(
             is HomeUiState.Empty -> {
                 EmptyContent()
             }
-            is HomeUiState.Error -> {}
+            is HomeUiState.Error -> {
+                ErrorContent(
+                    message = R.string.error_content_load_candidates
+                )
+            }
             is HomeUiState.Success -> {
                 CandidatesList(candidates = uiState.candidates, onCandidateClick = onCandidateClick)
             }
