@@ -30,4 +30,6 @@
 
     <string name="content_description_favorites">Favoris</string>
     <string name="content_description_delete">Supprimer</string>
+
+    <string name="error_content_load_candidate">Impossible de charger le candidat. Veuillez réessayer</string>
 </resources>
