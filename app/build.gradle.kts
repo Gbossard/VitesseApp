@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -45,6 +46,11 @@ dependencies {
     implementation(project(":feature:edit-page"))
     implementation(project(":feature:details"))
 
+    kover(project(":core"))
+    kover(project(":feature:home"))
+    kover(project(":feature:edit-page"))
+    kover(project(":feature:details"))
+
     // Navigation
     implementation(libs.androidx.navigation.compose)
 
@@ -60,4 +66,26 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "*_HiltModules*",
+                    "*_Factory*",
+                    "*_Provide*",
+                    "*Hilt_*",
+                    "*.HiltWrapper_*"
+                )
+                classes(
+                    "*.BuildConfig",
+                    "*ComposableSingletons*",
+                    "*_Impl*"
+                )
+                annotatedBy("androidx.compose.ui.tooling.preview.Preview")
+            }
+        }
+    }
 }
