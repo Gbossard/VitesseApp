@@ -1,5 +1,6 @@
 package com.example.core.ui.composable
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,7 @@ import com.example.core.ui.theme.VitesseAppTheme
 @Composable
 fun ErrorContent(
     modifier: Modifier = Modifier,
-    message: Int
+    @StringRes message: Int
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
