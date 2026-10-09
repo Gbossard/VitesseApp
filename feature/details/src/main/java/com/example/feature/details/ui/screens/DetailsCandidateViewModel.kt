@@ -7,10 +7,13 @@ import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.storage.PhotoStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -41,30 +44,31 @@ class DetailsCandidateViewModel @Inject constructor(
 ): ViewModel() {
     private val candidateId: String = checkNotNull(savedStateHandle.get<String>("candidateId"))
 
-    val uiState: StateFlow<DetailsCandidateUiState> = candidateRepository.getCandidateByIdFlow(candidateId)
-        .map<CandidateEntity, DetailsCandidateUiState>  { candidate ->
+    private val candidateFlow = candidateRepository.getCandidateByIdFlow(candidateId)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiState: StateFlow<DetailsCandidateUiState> = candidateFlow
+        .distinctUntilChangedBy { it.salary }
+        .mapLatest  { candidate ->
             val result = candidateRepository.convertSalaryToGbp(candidate.salary)
             result.fold(
-                onSuccess = { salaryInGbp ->
-                    DetailsCandidateUiState.Success(
-                        candidate = candidate,
-                        salaryInGbp = salaryInGbp,
-                        salaryError = null
-                    )
-                },
+                onSuccess = { salaryInGbp -> salaryInGbp to null },
                 onFailure = { exception ->
-                    val errorType = when(exception) {
+                    val errorType = when (exception) {
                         is IOException -> SalaryError.NetworkError
                         is NoSuchElementException -> SalaryError.RateNotFound
                         else -> SalaryError.Unknown
                     }
-                    DetailsCandidateUiState.Success(
-                        candidate = candidate,
-                        salaryInGbp = null,
-                        salaryError = errorType
-                    )
+                    null to errorType
                 }
             )
+        }
+        .combine(candidateFlow) { (salaryInGbp, salaryError), candidate ->
+            DetailsCandidateUiState.Success(
+                candidate = candidate,
+                salaryInGbp = salaryInGbp,
+                salaryError = salaryError
+            ) as DetailsCandidateUiState
         }
         .onStart { emit(DetailsCandidateUiState.Loading) }
         .catch { emit(DetailsCandidateUiState.Error) }
