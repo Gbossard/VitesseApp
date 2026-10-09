@@ -26,6 +26,7 @@ hiltAndroid = "2.60.1"
 material3 = "1.5.0-alpha29"
 sqliteBundled = "2.7.1"
 turbine = "1.2.1"
+kover = "0.9.11"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -66,3 +67,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid"}
 android-library = { id = "com.android.library", version.ref = "agp" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
