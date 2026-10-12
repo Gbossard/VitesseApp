@@ -59,6 +59,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.core.data.local.CandidateEntity
+import com.example.core.ui.analytics.AnalyticsScreens
+import com.example.core.ui.analytics.LocalAnalyticsTracker
 import com.example.core.ui.composable.ErrorContent
 import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.theme.VitesseAppTheme
@@ -71,9 +73,15 @@ fun HomeScreen(
     onCandidateClick: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val analyticsTracker = LocalAnalyticsTracker.current
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val candidatesUiState by viewModel.candidatesUiState.collectAsStateWithLifecycle()
     val favoritesUiState by viewModel.favoritesUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        analyticsTracker.trackScreen(AnalyticsScreens.HOME)
+    }
+
     Scaffold(
         topBar = {
             HomeSearch(
