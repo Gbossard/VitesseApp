@@ -23,6 +23,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.R
 import com.example.core.data.local.CandidateEntity
+import com.example.core.ui.analytics.AnalyticsScreens
+import com.example.core.ui.analytics.LocalAnalyticsTracker
 import com.example.core.ui.composable.ErrorContent
 import com.example.core.ui.composable.LoadingContent
 import com.example.core.ui.composable.PhotoContent
@@ -61,12 +64,18 @@ fun DetailsCandidateScreen(
     onBackClick: () -> Unit,
     onEditClick: (String) -> Unit
 ) {
+    val analyticsTracker = LocalAnalyticsTracker.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val openDialog = rememberSaveable { mutableStateOf(false) }
     val state = uiState
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        analyticsTracker.trackScreen(AnalyticsScreens.DETAILS_CANDIDATE)
+    }
+
     Scaffold(
         topBar = {
 
