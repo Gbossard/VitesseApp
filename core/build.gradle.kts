@@ -49,6 +49,11 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.converter.kotlinx.serialization)
 
+    // Firebase
+    api(platform(libs.firebase.bom))
+    api(libs.firebase.analytics)
+    api(libs.firebase.crashlytics)
+
     debugImplementation(libs.androidx.compose.ui.tooling)
 
 
