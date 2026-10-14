@@ -79,12 +79,14 @@ kover {
                     "*_Factory*",
                     "*_Provide*",
                     "*Hilt_*",
-                    "*.HiltWrapper_*"
-                )
-                classes(
+                    "*.HiltWrapper_*",
                     "*.BuildConfig",
                     "*ComposableSingletons*",
                     "*_Impl*"
+                )
+                packages(
+                    "dagger.hilt.*",
+                    "hilt_aggregated_deps*"
                 )
                 annotatedBy("androidx.compose.ui.tooling.preview.Preview")
             }
