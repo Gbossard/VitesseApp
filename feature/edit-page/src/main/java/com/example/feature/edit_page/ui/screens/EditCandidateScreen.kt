@@ -62,8 +62,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.photopicker.compose.ExperimentalPhotoPickerComposeApi
-import com.example.core.ui.analytics.AnalyticsScreens
-import com.example.core.ui.analytics.LocalAnalyticsTracker
 import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.edit_page.R
@@ -81,14 +79,9 @@ fun EditCandidateScreen(
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
-    val analyticsTracker = LocalAnalyticsTracker.current
     val editUiState by viewModel.editUiState.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        analyticsTracker.trackScreen(AnalyticsScreens.EDIT_CANDIDATE)
-    }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
