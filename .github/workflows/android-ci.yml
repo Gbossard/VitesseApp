@@ -32,6 +32,12 @@ jobs:
       - name: Set up Gradle Cache
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Decode google-services.json from Base64
+        env:
+          GOOGLE_SERVICES_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          echo "$GOOGLE_SERVICES_BASE64" | base64 --decode > app/google-services.json
+
       - name: Make gradlew executable
         run: chmod +x gradlew
 
@@ -72,6 +78,15 @@ jobs:
 
       - name: Set up Gradle Cache
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode google-services.json from Base64
+        env:
+          GOOGLE_SERVICES_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          echo "$GOOGLE_SERVICES_BASE64" | base64 --decode > app/google-services.json
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
 
       - name: Run tests
         uses: reactivecircus/android-emulator-runner@v2
