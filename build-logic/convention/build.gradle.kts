@@ -27,5 +27,13 @@ gradlePlugin {
             id = "vitesse.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("androidCompose") {
+            id = "vitesse.android.compose"
+            implementationClass = "AndroidComposeConventionPlugin"
+        }
+        register("androidHilt") {
+            id = "vitesse.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
     }
 }
