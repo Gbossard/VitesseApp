@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.vitesse.android.library)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.vitesse.android.compose)
+    alias(libs.plugins.vitesse.android.hilt)
 }
 
 android {
@@ -13,8 +12,6 @@ dependencies {
     implementation(project(":core"))
 
     // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     testImplementation(project(":core:testing"))
