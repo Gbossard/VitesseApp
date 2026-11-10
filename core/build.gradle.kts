@@ -28,12 +28,11 @@ dependencies {
     implementation(libs.converter.kotlinx.serialization)
 
     // Firebase
-    api(platform(libs.firebase.bom))
-    api(libs.firebase.analytics)
-    api(libs.firebase.crashlytics)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
-
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
