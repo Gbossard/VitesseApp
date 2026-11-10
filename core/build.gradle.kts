@@ -1,30 +1,12 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt.android)
+    alias(libs.plugins.vitesse.android.library)
+    alias(libs.plugins.vitesse.android.compose)
+    alias(libs.plugins.vitesse.android.hilt)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kover)
 }
 
 android {
     namespace = "com.example.core"
-    compileSdk {
-        version = release(37)
-    }
-
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
@@ -34,10 +16,6 @@ dependencies {
 
     // Coil
     implementation(libs.coil.compose)
-
-    // Hilt
-    api(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
 
     // Room
     implementation(libs.androidx.room3.runtime)
