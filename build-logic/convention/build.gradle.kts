@@ -39,5 +39,9 @@ gradlePlugin {
             id = "vitesse.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
+        register("androidApplication") {
+            id = "vitesse.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
     }
 }
