@@ -81,3 +81,4 @@ vitesse-android-library = { id = "vitesse.android.library" }
 vitesse-android-compose = { id = "vitesse.android.compose" }
 vitesse-android-hilt = { id = "vitesse.android.hilt" }
 vitesse-android-feature = { id = "vitesse.android.feature" }
+vitesse-android-application = { id = "vitesse.android.application" }
