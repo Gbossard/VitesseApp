@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint
+    name: Lint & Code Style
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -38,6 +38,9 @@ jobs:
         run: |
           echo "$GOOGLE_SERVICES_BASE64" | base64 --decode > app/google-services.json
 
+      - name: Run Ktlint Check
+        run: ./gradlew ktlintCheck --continue
+
       - name: Run Lint
         run: ./gradlew lintDebug
 
@@ -46,7 +49,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lint-reports
-          path: "**/build/reports/lint-results-*.html"
+          path: |
+            **/build/reports/lint-results-*.html
+            **/build/reports/ktlint/
           retention-days: 7
 
   build-and-unit-tests:
