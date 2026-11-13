@@ -376,7 +376,7 @@ fun DeleteDialog(
                 )
             }
         },
-        dismissButton = {
+                dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
