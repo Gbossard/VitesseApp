@@ -8,6 +8,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("com.android.library")
             pluginManager.apply("org.jetbrains.kotlinx.kover")
+            pluginManager.apply("vitesse.android.ktlint")
 
             extensions.configure<LibraryExtension> {
                 configureAndroidCommon(this)

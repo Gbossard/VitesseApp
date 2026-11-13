@@ -10,6 +10,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             pluginManager.apply("org.jetbrains.kotlinx.kover")
             pluginManager.apply("vitesse.android.compose")
             pluginManager.apply("vitesse.android.hilt")
+            pluginManager.apply("vitesse.android.ktlint")
 
             extensions.configure<ApplicationExtension> {
                 configureAndroidCommon(this)
