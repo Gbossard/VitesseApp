@@ -43,5 +43,9 @@ gradlePlugin {
             id = "vitesse.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("androidKtlint") {
+            id = "vitesse.android.ktlint"
+            implementationClass = "AndroidKtlintConventionPlugin"
+        }
     }
 }
