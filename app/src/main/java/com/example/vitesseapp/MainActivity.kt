@@ -28,20 +28,26 @@ class MainActivity : ComponentActivity() {
         setContent {
             VitesseAppTheme {
                 CompositionLocalProvider(LocalAnalyticsTracker provides analyticsTracker) {
-                    val navController = rememberNavController().apply {
-                        DisposableEffect(this) {
-                            val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
-                                destination.route?.let { route ->
-                                    analyticsTracker.trackScreen(route)
+                    val navController =
+                        rememberNavController().apply {
+                            DisposableEffect(this) {
+                                val listener =
+                                    NavController.OnDestinationChangedListener {
+                                            _,
+                                            destination,
+                                            _
+                                        ->
+                                        destination.route?.let { route ->
+                                            analyticsTracker.trackScreen(route)
+                                        }
+                                    }
+                                addOnDestinationChangedListener(listener)
+
+                                onDispose {
+                                    removeOnDestinationChangedListener(listener)
                                 }
                             }
-                            addOnDestinationChangedListener(listener)
-
-                            onDispose {
-                                removeOnDestinationChangedListener(listener)
-                            }
                         }
-                    }
 
                     VitesseNavHost(
                         navController = navController
