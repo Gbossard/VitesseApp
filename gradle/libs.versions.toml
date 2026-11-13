@@ -30,6 +30,7 @@ firebaseBom = "35.0.0"
 kover = "0.9.11"
 googleServices = "4.5.0"
 firebaseCrashlytics = "3.0.8"
+ktlint = "14.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -77,8 +78,11 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlytics" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+
 vitesse-android-library = { id = "vitesse.android.library" }
 vitesse-android-compose = { id = "vitesse.android.compose" }
 vitesse-android-hilt = { id = "vitesse.android.hilt" }
 vitesse-android-feature = { id = "vitesse.android.feature" }
 vitesse-android-application = { id = "vitesse.android.application" }
+vitesse-android-ktlint = { id = "vitesse.android.ktlint" }
