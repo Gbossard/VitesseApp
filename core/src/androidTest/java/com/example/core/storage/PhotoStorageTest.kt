@@ -4,14 +4,14 @@ import android.content.Context
 import android.net.Uri
 import androidx.test.core.app.ApplicationProvider
 import com.example.core.data.storage.PhotoStorage
+import java.io.File
+import java.io.FileNotFoundException
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.io.File
-import java.io.FileNotFoundException
 
 class PhotoStorageTest {
     private lateinit var context: Context
@@ -22,7 +22,6 @@ class PhotoStorageTest {
         context = ApplicationProvider.getApplicationContext()
         photoStorage = PhotoStorage(context)
     }
-
 
     // Copy Photo
     @Test
@@ -62,7 +61,6 @@ class PhotoStorageTest {
 
         assertTrue(result.isFailure)
     }
-
 
     // Delete Photo
     @Test

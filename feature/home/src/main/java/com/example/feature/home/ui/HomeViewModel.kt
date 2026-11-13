@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -19,23 +21,20 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 sealed interface HomeUiState {
-    data class Success(val candidates: List<CandidateEntity>): HomeUiState
-    data object Error: HomeUiState
-    data object Empty: HomeUiState
-    data object Loading: HomeUiState
+    data class Success(val candidates: List<CandidateEntity>) : HomeUiState
+    data object Error : HomeUiState
+    data object Empty : HomeUiState
+    data object Loading : HomeUiState
 }
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    candidateRepository: CandidateRepository
-): ViewModel() {
+class HomeViewModel @Inject constructor(candidateRepository: CandidateRepository) : ViewModel() {
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val candidatesUiState: StateFlow<HomeUiState> = _searchQuery
         .toHomeUiState(scope = viewModelScope) { query ->
@@ -57,17 +56,16 @@ class HomeViewModel @Inject constructor(
 private fun Flow<String>.toHomeUiState(
     scope: CoroutineScope,
     getCandidates: (String) -> Flow<List<CandidateEntity>>
-): StateFlow<HomeUiState> =
-    this
-        .debounce(300.milliseconds)
-        .flatMapLatest(getCandidates)
-        .map { candidates ->
-            if (candidates.isEmpty()) HomeUiState.Empty else HomeUiState.Success(candidates)
-        }
-        .onStart { emit(HomeUiState.Loading) }
-        .catch { emit(HomeUiState.Error) }
-        .stateIn(
-            scope = scope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = HomeUiState.Loading
-        )
+): StateFlow<HomeUiState> = this
+    .debounce(300.milliseconds)
+    .flatMapLatest(getCandidates)
+    .map { candidates ->
+        if (candidates.isEmpty()) HomeUiState.Empty else HomeUiState.Success(candidates)
+    }
+    .onStart { emit(HomeUiState.Loading) }
+    .catch { emit(HomeUiState.Error) }
+    .stateIn(
+        scope = scope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = HomeUiState.Loading
+    )

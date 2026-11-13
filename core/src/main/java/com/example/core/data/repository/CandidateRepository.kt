@@ -3,8 +3,8 @@ package com.example.core.data.repository
 import com.example.core.data.local.CandidateDao
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.network.CurrencyApiService
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 interface CandidateRepository {
     fun getAllCandidates(query: String): Flow<List<CandidateEntity>>
@@ -42,15 +42,14 @@ class CandidateRepositoryImpl @Inject constructor(
 
     override suspend fun deleteCandidate(candidate: CandidateEntity) = dao.deleteCandidate(candidate)
 
-    override suspend fun convertSalaryToGbp(salary: Int): Result<Double> =
-        try {
-            val response = currencyApi.getEuroExchangeRates()
-            val gbpRates = response.rates?.get("gbp") ?: return Result.failure(
-                NoSuchElementException()
-            )
-            val salaryInGbp = salary * gbpRates
-            Result.success(salaryInGbp)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+    override suspend fun convertSalaryToGbp(salary: Int): Result<Double> = try {
+        val response = currencyApi.getEuroExchangeRates()
+        val gbpRates = response.rates?.get("gbp") ?: return Result.failure(
+            NoSuchElementException()
+        )
+        val salaryInGbp = salary * gbpRates
+        Result.success(salaryInGbp)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 }

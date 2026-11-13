@@ -11,6 +11,11 @@ import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.storage.PhotoStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.time.LocalDate
+import java.util.UUID
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,11 +23,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.time.LocalDate
-import java.util.UUID
-import javax.inject.Inject
 
 data class EditUiState(
     val firstName: TextFieldState = TextFieldState(),
@@ -44,20 +44,20 @@ data class EditUiState(
 )
 
 sealed interface EditUiEvent {
-    data object SaveSuccess: EditUiEvent
-    data class SaveErrorEvent(val error: SaveError): EditUiEvent
+    data object SaveSuccess : EditUiEvent
+    data class SaveErrorEvent(val error: SaveError) : EditUiEvent
 }
 
 sealed interface SaveError {
-    data object DatabaseError: SaveError
-    data object FileNotFound: SaveError
-    data object StorageFull: SaveError
-    data object Unknown: SaveError
+    data object DatabaseError : SaveError
+    data object FileNotFound : SaveError
+    data object StorageFull : SaveError
+    data object Unknown : SaveError
 }
 
 sealed interface FieldError {
-    data object EmptyField: FieldError
-    data object InvalidField: FieldError
+    data object EmptyField : FieldError
+    data object InvalidField : FieldError
 }
 
 @HiltViewModel
@@ -65,7 +65,7 @@ class EditCandidateViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val candidateRepository: CandidateRepository,
     private val photoStorage: PhotoStorage
-): ViewModel() {
+) : ViewModel() {
     private val candidateId: String? = savedStateHandle.get<String>("candidateId")
     private val _editUiState = MutableStateFlow(EditUiState())
     val editUiState: StateFlow<EditUiState> = _editUiState.asStateFlow()
@@ -83,18 +83,20 @@ class EditCandidateViewModel @Inject constructor(
     private fun loadCandidate(candidateId: String) {
         viewModelScope.launch {
             val candidate = candidateRepository.getCandidateById(candidateId) ?: return@launch
-            _editUiState.update { it.copy(
-                firstName = TextFieldState(candidate.firstName),
-                lastName = TextFieldState(candidate.lastName),
-                phone = TextFieldState(candidate.phone),
-                email = TextFieldState(candidate.email),
-                dateOfBirth = candidate.dateOfBirth,
-                photo = candidate.photo?.toUri(),
-                salary = TextFieldState(candidate.salary.toString()),
-                notes = TextFieldState(candidate.notes),
-                isFavorite = candidate.isFavorite,
-                originalPhotoPath = candidate.photo
-            ) }
+            _editUiState.update {
+                it.copy(
+                    firstName = TextFieldState(candidate.firstName),
+                    lastName = TextFieldState(candidate.lastName),
+                    phone = TextFieldState(candidate.phone),
+                    email = TextFieldState(candidate.email),
+                    dateOfBirth = candidate.dateOfBirth,
+                    photo = candidate.photo?.toUri(),
+                    salary = TextFieldState(candidate.salary.toString()),
+                    notes = TextFieldState(candidate.notes),
+                    isFavorite = candidate.isFavorite,
+                    originalPhotoPath = candidate.photo
+                )
+            }
         }
     }
 
@@ -106,7 +108,10 @@ class EditCandidateViewModel @Inject constructor(
                     phone = _editUiState.value.phone.text.toString(),
                     email = _editUiState.value.email.text.toString(),
                     dateOfBirth = _editUiState.value.dateOfBirth
-                )) return@launch
+                )
+            ) {
+                return@launch
+            }
 
             val currentState = _editUiState.value
             var finalPhoto: String? = null
@@ -122,7 +127,7 @@ class EditCandidateViewModel @Inject constructor(
                             finalPhoto = it
                         }
                         .onFailure { exception ->
-                            val errorType = when(exception) {
+                            val errorType = when (exception) {
                                 is FileNotFoundException -> SaveError.FileNotFound
                                 is IOException -> SaveError.StorageFull
                                 else -> SaveError.Unknown
@@ -131,7 +136,6 @@ class EditCandidateViewModel @Inject constructor(
                             return@launch
                         }
                 }
-
             }
 
             val candidate = CandidateEntity(
@@ -152,7 +156,11 @@ class EditCandidateViewModel @Inject constructor(
                 if (oldPhoto != null && oldPhoto != finalPhoto) {
                     photoStorage.deletePhoto(oldPhoto)
                         .onFailure { exception ->
-                            Log.w("EditCandidateViewModel", "Error to delete old photo : $oldPhoto", exception)
+                            Log.w(
+                                "EditCandidateViewModel",
+                                "Error to delete old photo : $oldPhoto",
+                                exception
+                            )
                         }
                 }
                 _events.send(EditUiEvent.SaveSuccess)
@@ -170,26 +178,38 @@ class EditCandidateViewModel @Inject constructor(
         _editUiState.update { it.copy(photo = newUri) }
     }
 
-    fun formIsValid(firstName: String, lastName:String, phone: String, email: String, dateOfBirth: LocalDate?): Boolean {
+    fun formIsValid(
+        firstName: String,
+        lastName: String,
+        phone: String,
+        email: String,
+        dateOfBirth: LocalDate?
+    ): Boolean {
         val newFirstNameError = validateNotBlank(firstName)
         val newLastNameError = validateNotBlank(lastName)
         val newPhoneError = validateNotBlank(phone)
         val newEmailError = when {
-            email.isBlank() ->  FieldError.EmptyField
+            email.isBlank() -> FieldError.EmptyField
             !email.isValidEmail() -> FieldError.InvalidField
             else -> null
         }
         val newDateOfBirth = if (dateOfBirth == null) FieldError.EmptyField else null
 
-        _editUiState.update { it.copy(
-            firstNameError = newFirstNameError,
-            lastNameError = newLastNameError,
-            phoneError = newPhoneError,
-            emailError = newEmailError,
-            dateOfBirthError = newDateOfBirth
-        ) }
+        _editUiState.update {
+            it.copy(
+                firstNameError = newFirstNameError,
+                lastNameError = newLastNameError,
+                phoneError = newPhoneError,
+                emailError = newEmailError,
+                dateOfBirthError = newDateOfBirth
+            )
+        }
 
-        return newFirstNameError == null && newLastNameError == null && newPhoneError == null && newEmailError == null && newDateOfBirth == null
+        return newFirstNameError == null &&
+            newLastNameError == null &&
+            newPhoneError == null &&
+            newEmailError == null &&
+            newDateOfBirth == null
     }
 
     private fun validateNotBlank(text: String): FieldError? = if (text.isBlank()) FieldError.EmptyField else null

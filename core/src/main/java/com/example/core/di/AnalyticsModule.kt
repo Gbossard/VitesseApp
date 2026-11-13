@@ -13,7 +13,5 @@ import javax.inject.Singleton
 object AnalyticsModule {
     @Provides
     @Singleton
-    fun provideAnalyticsTracker(tracker: FirebaseAnalyticsTracker): AnalyticsTracker {
-        return tracker
-    }
+    fun provideAnalyticsTracker(tracker: FirebaseAnalyticsTracker): AnalyticsTracker = tracker
 }

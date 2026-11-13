@@ -21,10 +21,7 @@ import com.example.core.R
 import com.example.core.ui.theme.VitesseAppTheme
 
 @Composable
-fun ErrorContent(
-    modifier: Modifier = Modifier,
-    @StringRes message: Int
-) {
+fun ErrorContent(modifier: Modifier = Modifier, @StringRes message: Int) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,

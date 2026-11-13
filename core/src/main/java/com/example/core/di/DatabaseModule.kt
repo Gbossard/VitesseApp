@@ -16,13 +16,9 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideCandidateDatabase(@ApplicationContext context: Context) : CandidateDatabase {
-        return CandidateDatabase.getDatabase(context)
-    }
+    fun provideCandidateDatabase(@ApplicationContext context: Context): CandidateDatabase = CandidateDatabase.getDatabase(context)
 
     @Provides
     @Singleton
-    fun provideCandidateDao(database: CandidateDatabase) : CandidateDao {
-        return database.candidateDao()
-    }
+    fun provideCandidateDao(database: CandidateDatabase): CandidateDao = database.candidateDao()
 }

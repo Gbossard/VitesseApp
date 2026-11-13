@@ -49,11 +49,11 @@ import com.example.feature.details.ui.util.dialPhoneNumber
 import com.example.feature.details.ui.util.openEmail
 import com.example.feature.details.ui.util.openSms
 import com.example.feature.details.ui.util.toErrorMessageRes
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import kotlinx.coroutines.launch
 
 @Composable
 fun DetailsCandidateScreen(
@@ -70,7 +70,6 @@ fun DetailsCandidateScreen(
 
     Scaffold(
         topBar = {
-
             if (state is DetailsCandidateUiState.Success) {
                 val candidate = state.candidate
                 AppBar(
@@ -80,11 +79,11 @@ fun DetailsCandidateScreen(
                     onDeleteClick = { openDialog.value = !openDialog.value },
                     firstName = candidate.firstName,
                     lastName = candidate.lastName,
-                    isFavorite = candidate.isFavorite,
+                    isFavorite = candidate.isFavorite
                 )
             }
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         when (state) {
             is DetailsCandidateUiState.Error -> {
@@ -170,28 +169,23 @@ fun ContactContent(
         ContactItem(
             iconRes = R.drawable.ic_call_24dp,
             textRes = com.example.feature.details.R.string.call_button,
-            onClick = {context.dialPhoneNumber(phone, onError = onError)}
+            onClick = { context.dialPhoneNumber(phone, onError = onError) }
         )
         ContactItem(
             iconRes = com.example.feature.details.R.drawable.ic_chat_24dp,
             textRes = com.example.feature.details.R.string.sms_button,
-            onClick = {context.openSms(phone, onError = onError)}
+            onClick = { context.openSms(phone, onError = onError) }
         )
         ContactItem(
             iconRes = R.drawable.ic_mail_24dp,
             textRes = com.example.feature.details.R.string.email_button,
-            onClick = {context.openEmail(email, onError = onError)}
+            onClick = { context.openEmail(email, onError = onError) }
         )
     }
 }
 
 @Composable
-fun ContactItem(
-    modifier: Modifier = Modifier,
-    iconRes: Int,
-    textRes: Int,
-    onClick: () -> Unit
-) {
+fun ContactItem(modifier: Modifier = Modifier, iconRes: Int, textRes: Int, onClick: () -> Unit) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -208,11 +202,10 @@ fun ContactItem(
         }
         Text(
             text = stringResource(textRes),
-            fontSize = 12.sp,
+            fontSize = 12.sp
         )
     }
 }
-
 
 @Composable
 fun InformationContent(
@@ -241,12 +234,18 @@ fun InformationContent(
     Column(modifier = modifier.padding(16.dp)) {
         CardContent(
             title = stringResource(com.example.feature.details.R.string.headline_about),
-            subhead = "$formattedDate ${stringResource(id = com.example.feature.details.R.string.subhead_years, age)}",
+            subhead = "$formattedDate ${stringResource(
+                id = com.example.feature.details.R.string.subhead_years,
+                age
+            )}",
             body = stringResource(com.example.feature.details.R.string.body_birthday)
         )
         CardContent(
             title = stringResource(com.example.feature.details.R.string.headline_expected_salary),
-            subhead = stringResource(id = com.example.feature.details.R.string.subhead_euros, salary),
+            subhead = stringResource(
+                id = com.example.feature.details.R.string.subhead_euros,
+                salary
+            ),
             body = salaryGbpText
         )
         CardContent(
@@ -265,7 +264,7 @@ fun CardContent(
 ) {
     Card(
         modifier = modifier.fillMaxWidth().padding(bottom = 16.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer),
+        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         Text(
             text = title,
@@ -283,7 +282,7 @@ fun CardContent(
                 text = body,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = 12.sp,
+                fontSize = 12.sp
             )
         }
     }
@@ -298,7 +297,7 @@ fun AppBar(
     onDeleteClick: () -> Unit,
     firstName: String,
     lastName: String,
-    isFavorite: Boolean,
+    isFavorite: Boolean
 ) {
     TopAppBar(
         modifier = modifier,
@@ -316,20 +315,32 @@ fun AppBar(
         actions = {
             IconButton(onClick = onFavoriteClick) {
                 Icon(
-                    painter = if (isFavorite) painterResource(com.example.feature.details.R.drawable.ic_star_fill_24dp) else painterResource(com.example.feature.details.R.drawable.ic_star_24dp),
-                    contentDescription = stringResource(com.example.feature.details.R.string.content_description_favorites),
+                    painter = if (isFavorite) {
+                        painterResource(
+                            com.example.feature.details.R.drawable.ic_star_fill_24dp
+                        )
+                    } else {
+                        painterResource(com.example.feature.details.R.drawable.ic_star_24dp)
+                    },
+                    contentDescription = stringResource(
+                        com.example.feature.details.R.string.content_description_favorites
+                    )
                 )
             }
             IconButton(onClick = onEditClick) {
                 Icon(
-                    painter =  painterResource(R.drawable.ic_edit_24dp),
-                    contentDescription = stringResource(R.string.content_description_edit),
+                    painter = painterResource(R.drawable.ic_edit_24dp),
+                    contentDescription = stringResource(R.string.content_description_edit)
                 )
             }
             IconButton(onClick = onDeleteClick) {
                 Icon(
-                    painter =  painterResource(com.example.feature.details.R.drawable.ic_delete_24dp),
-                    contentDescription = stringResource(com.example.feature.details.R.string.content_description_delete),
+                    painter = painterResource(
+                        com.example.feature.details.R.drawable.ic_delete_24dp
+                    ),
+                    contentDescription = stringResource(
+                        com.example.feature.details.R.string.content_description_delete
+                    )
                 )
             }
         },
@@ -358,15 +369,20 @@ fun DeleteDialog(
             TextButton(
                 onClick = onConfirmation
             ) {
-                Text(text = stringResource(com.example.feature.details.R.string.dialog_button_confirm))
+                Text(
+                    text = stringResource(
+                        com.example.feature.details.R.string.dialog_button_confirm
+                    )
+                )
             }
         },
         dismissButton = {
             TextButton(
                 onClick = onDismissRequest
             ) {
-                Text(text = stringResource(com.example.feature.details.R.string.dialog_button_cancel))
-
+                Text(
+                    text = stringResource(com.example.feature.details.R.string.dialog_button_cancel)
+                )
             }
         }
     )
@@ -391,11 +407,10 @@ private fun ContactContentPreview() {
             notes = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             salary = 50000,
             salaryInGbp = 20.2,
-            salaryError = SalaryError.NetworkError,
+            salaryError = SalaryError.NetworkError
         )
     }
 }
-
 
 @Preview
 @Composable
@@ -408,6 +423,7 @@ private fun CardContentPreview() {
         )
     }
 }
+
 @Preview
 @Composable
 private fun AppBarPreview() {
@@ -419,7 +435,7 @@ private fun AppBarPreview() {
             onDeleteClick = {},
             firstName = "John",
             lastName = "Doe",
-            isFavorite = true,
+            isFavorite = true
         )
     }
 }

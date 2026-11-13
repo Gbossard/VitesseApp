@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.core.ui.theme.VitesseAppTheme
 
-@OptIn( ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun LoadingContent(modifier: Modifier = Modifier) {
     Column(

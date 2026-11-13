@@ -9,12 +9,8 @@ class DateConverter {
 
     @RequiresApi(Build.VERSION_CODES.O)
     @ColumnTypeConverter
-    fun fromString(value: String): LocalDate {
-        return value.let { LocalDate.parse(it) }
-    }
+    fun fromString(value: String): LocalDate = value.let { LocalDate.parse(it) }
 
     @ColumnTypeConverter
-    fun toString(date: LocalDate): String {
-        return date.toString()
-    }
+    fun toString(date: LocalDate): String = date.toString()
 }

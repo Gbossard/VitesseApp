@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 fun EmbeddedPhotoPickerModalBottomSheet(
     sheetState: SheetState,
     onUriPermissionGranted: (List<Uri>) -> Unit,
-    onUriPermissionRevoked: (List<Uri>) -> Unit,
+    onUriPermissionRevoked: (List<Uri>) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -38,7 +38,7 @@ fun EmbeddedPhotoPickerModalBottomSheet(
         onUriPermissionGranted = onUriPermissionGranted,
         onUriPermissionRevoked = onUriPermissionRevoked
     )
-    ModalBottomSheet (
+    ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = {}
     ) {

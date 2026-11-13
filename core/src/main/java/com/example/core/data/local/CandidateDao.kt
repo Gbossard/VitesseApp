@@ -8,18 +8,22 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CandidateDao {
-    @Query(""" 
+    @Query(
+        """ 
             SELECT * FROM candidate_table 
             WHERE (firstName || ' ' || lastName) LIKE '%' || :query || '%' 
             OR (lastName || ' ' || firstName) LIKE '%' || :query || '%' 
-    """)
+    """
+    )
     fun getAllCandidates(query: String): Flow<List<CandidateEntity>>
 
-    @Query(""" 
+    @Query(
+        """ 
         SELECT * FROM candidate_table WHERE isFavorite = 1
         AND ((firstName || ' ' || lastName) LIKE '%' || :query || '%' 
             OR (lastName || ' ' || firstName) LIKE '%' || :query || '%' )
-    """)
+    """
+    )
     fun getAllFavorites(query: String): Flow<List<CandidateEntity>>
 
     @Query("UPDATE candidate_table SET isFavorite = NOT isFavorite WHERE id = :candidateId")

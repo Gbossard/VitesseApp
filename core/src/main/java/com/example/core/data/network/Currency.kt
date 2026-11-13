@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:standard:filename")
+
 package com.example.core.data.network
 
 import kotlinx.serialization.SerialName
