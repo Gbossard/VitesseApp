@@ -13,6 +13,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.just
 import io.mockk.runs
+import java.io.IOException
+import java.time.LocalDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -21,8 +23,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
-import java.io.IOException
-import java.time.LocalDate
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DetailsCandidateViewModelTest {
@@ -100,35 +100,46 @@ class DetailsCandidateViewModelTest {
 
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
-            assertEquals(DetailsCandidateUiState.Success(candidate, null, SalaryError.NetworkError), awaitItem())
+            assertEquals(
+                DetailsCandidateUiState.Success(candidate, null, SalaryError.NetworkError),
+                awaitItem()
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun getUiState_returnsSuccessState_withRateNotFoundError() = runTest {
-        coEvery { repository.convertSalaryToGbp(any()) } returns Result.failure(NoSuchElementException())
+        coEvery { repository.convertSalaryToGbp(any()) } returns
+            Result.failure(NoSuchElementException())
         every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
 
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
-            assertEquals(DetailsCandidateUiState.Success(candidate, null, SalaryError.RateNotFound), awaitItem())
+            assertEquals(
+                DetailsCandidateUiState.Success(candidate, null, SalaryError.RateNotFound),
+                awaitItem()
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
     fun getUiState_returnsSuccessState_withUnknownError() = runTest {
-        coEvery { repository.convertSalaryToGbp(any()) } returns Result.failure(RuntimeException("Error"))
+        coEvery { repository.convertSalaryToGbp(any()) } returns
+            Result.failure(RuntimeException("Error"))
         every { repository.getCandidateByIdFlow(candidateId) } returns flowOf(candidate)
 
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
             assertEquals(DetailsCandidateUiState.Loading, awaitItem())
-            assertEquals(DetailsCandidateUiState.Success(candidate, null, SalaryError.Unknown), awaitItem())
+            assertEquals(
+                DetailsCandidateUiState.Success(candidate, null, SalaryError.Unknown),
+                awaitItem()
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -150,7 +161,7 @@ class DetailsCandidateViewModelTest {
         viewModel.toggleFavorite()
         advanceUntilIdle()
 
-        coVerify(exactly = 1) { repository.toggleFavorite(candidateId)}
+        coVerify(exactly = 1) { repository.toggleFavorite(candidateId) }
     }
 
     @Test
@@ -174,5 +185,4 @@ class DetailsCandidateViewModelTest {
         coVerify(exactly = 1) { repository.deleteCandidate(candidate) }
         coVerify(exactly = 1) { photoStorage.deletePhoto(candidate.photo) }
     }
-
 }

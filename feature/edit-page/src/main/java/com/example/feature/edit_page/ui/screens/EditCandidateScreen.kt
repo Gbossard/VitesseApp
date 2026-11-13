@@ -69,8 +69,8 @@ import com.example.feature.edit_page.ui.composable.EmbeddedPhotoPickerModalBotto
 import com.example.feature.edit_page.ui.composable.isEmbeddedPhotoPickerSupported
 import com.example.feature.edit_page.ui.composable.toErrorMessageRes
 import com.example.feature.edit_page.ui.composable.toLocalDate
-import kotlinx.coroutines.launch
 import java.time.LocalDate
+import kotlinx.coroutines.launch
 
 @SuppressLint("LocalContextResourcesRead")
 @Composable
@@ -90,13 +90,15 @@ fun EditCandidateScreen(
                     onSaveClick()
                 }
                 is EditUiEvent.SaveErrorEvent -> {
-                    val resourcesId = when(event.error) {
+                    val resourcesId = when (event.error) {
                         is SaveError.DatabaseError -> R.string.form_error_save_database
                         is SaveError.FileNotFound -> R.string.form_error_save_file_not_found
                         is SaveError.StorageFull -> R.string.form_error_save_storage_full
                         is SaveError.Unknown -> R.string.form_error_save_unknown
                     }
-                    snackbarHostState.showSnackbar(message = context.resources.getString(resourcesId))
+                    snackbarHostState.showSnackbar(
+                        message = context.resources.getString(resourcesId)
+                    )
                 }
             }
         }
@@ -182,10 +184,7 @@ fun EditCandidateScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPhotoPickerComposeApi::class)
 @Composable
-fun PhotoSection(
-    photoUri: Uri?,
-    onPhotoChange: (Uri?) -> Unit
-) {
+fun PhotoSection(photoUri: Uri?, onPhotoChange: (Uri?) -> Unit) {
     var attachments by rememberSaveable { mutableStateOf(listOfNotNull(photoUri)) }
 
     LaunchedEffect(photoUri) {
@@ -331,7 +330,8 @@ fun DateSection(
 ) {
     val state = rememberDatePickerState(
         initialSelectedDate = dateOfBirth,
-        initialDisplayMode = DisplayMode.Input)
+        initialDisplayMode = DisplayMode.Input
+    )
 
     LaunchedEffect(dateOfBirth) {
         if (state.getSelectedDate() != dateOfBirth) {
@@ -358,7 +358,11 @@ fun DateSection(
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            DatePicker(state = state, focusRequester = null, modifier = Modifier.clip(shape = RoundedCornerShape(32.dp)))
+            DatePicker(
+                state = state,
+                focusRequester = null,
+                modifier = Modifier.clip(shape = RoundedCornerShape(32.dp))
+            )
             Error(
                 error = dateOfBirthError,
                 color = MaterialTheme.colorScheme.error,
@@ -387,21 +391,23 @@ fun Error(
 }
 
 @Composable
-fun AppBar(
-    modifier: Modifier = Modifier,
-    onBackClick: () -> Unit,
-    isEditing: Boolean
-) {
+fun AppBar(modifier: Modifier = Modifier, onBackClick: () -> Unit, isEditing: Boolean) {
     TopAppBar(
         modifier = modifier,
         title = {
-            Text(text = stringResource(if (isEditing) com.example.core.R.string.edit_candidate else com.example.core.R.string.add_candidate ))
+            Text(
+                text = stringResource(
+                    if (isEditing) com.example.core.R.string.edit_candidate else com.example.core.R.string.add_candidate
+                )
+            )
         },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Icon(
                     painter = painterResource(com.example.core.R.drawable.ic_arrow_back_24dp),
-                    contentDescription = stringResource(com.example.core.R.string.content_description_back)
+                    contentDescription = stringResource(
+                        com.example.core.R.string.content_description_back
+                    )
                 )
             }
         },

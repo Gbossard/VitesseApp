@@ -7,6 +7,8 @@ import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.storage.PhotoStorage
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.io.IOException
+import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +19,6 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.io.IOException
-import javax.inject.Inject
 
 sealed interface SalaryError {
     data object NetworkError : SalaryError
@@ -31,9 +31,9 @@ sealed interface DetailsCandidateUiState {
         val candidate: CandidateEntity,
         val salaryInGbp: Double? = null,
         val salaryError: SalaryError? = null
-    ): DetailsCandidateUiState
-    data object Error: DetailsCandidateUiState
-    data object Loading: DetailsCandidateUiState
+    ) : DetailsCandidateUiState
+    data object Error : DetailsCandidateUiState
+    data object Loading : DetailsCandidateUiState
 }
 
 @HiltViewModel
@@ -41,7 +41,7 @@ class DetailsCandidateViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val candidateRepository: CandidateRepository,
     private val photoStorage: PhotoStorage
-): ViewModel() {
+) : ViewModel() {
     private val candidateId: String = checkNotNull(savedStateHandle.get<String>("candidateId"))
 
     private val candidateFlow = candidateRepository.getCandidateByIdFlow(candidateId)
@@ -49,7 +49,7 @@ class DetailsCandidateViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<DetailsCandidateUiState> = candidateFlow
         .distinctUntilChangedBy { it.salary }
-        .mapLatest  { candidate ->
+        .mapLatest { candidate ->
             val result = candidateRepository.convertSalaryToGbp(candidate.salary)
             result.fold(
                 onSuccess = { salaryInGbp -> salaryInGbp to null },

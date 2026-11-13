@@ -16,5 +16,5 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindCandidateRepository(
         candidateRepositoryImpl: CandidateRepositoryImpl
-    ) : CandidateRepository
+    ): CandidateRepository
 }

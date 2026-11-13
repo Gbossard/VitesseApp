@@ -105,11 +105,7 @@ fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeSearch(
-    modifier: Modifier = Modifier,
-    query: String,
-    onQueryChange: (String) -> Unit
-) {
+fun HomeSearch(modifier: Modifier = Modifier, query: String, onQueryChange: (String) -> Unit) {
     val textFieldState = rememberTextFieldState(initialText = query)
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -131,7 +127,7 @@ fun HomeSearch(
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
         ),
         placeholder = {
             Text(
@@ -144,7 +140,9 @@ fun HomeSearch(
                 IconButton(onClick = { textFieldState.clearText() }) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close_24dp),
-                        contentDescription = stringResource(R.string.content_description_delete_query)
+                        contentDescription = stringResource(
+                            R.string.content_description_delete_query
+                        )
                     )
                 }
             } else {
@@ -155,7 +153,7 @@ fun HomeSearch(
             }
         },
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        onKeyboardAction = { keyboardController?.hide() },
+        onKeyboardAction = { keyboardController?.hide() }
     )
 }
 
@@ -164,7 +162,7 @@ fun HomeTabs(
     modifier: Modifier = Modifier,
     candidatesUiState: HomeUiState,
     favoritesUiState: HomeUiState,
-    onCandidateClick: (String) -> Unit,
+    onCandidateClick: (String) -> Unit
 ) {
     var state by rememberSaveable { mutableIntStateOf(0) }
     val uiState = when (state) {
@@ -172,7 +170,8 @@ fun HomeTabs(
         else -> favoritesUiState
     }
 
-    val titles = listOf(stringResource(R.string.tab_item_all), stringResource(R.string.tab_item_favorite))
+    val titles =
+        listOf(stringResource(R.string.tab_item_all), stringResource(R.string.tab_item_favorite))
     Column(
         modifier = modifier
     ) {
@@ -182,7 +181,7 @@ fun HomeTabs(
                     selected = state == index,
                     unselectedContentColor = MaterialTheme.colorScheme.onSurface,
                     onClick = { state = index },
-                    text = { Text(text = title, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+                    text = { Text(text = title, maxLines = 2, overflow = TextOverflow.Ellipsis) }
                 )
             }
         }
@@ -209,12 +208,12 @@ fun HomeTabs(
 fun CandidatesList(
     modifier: Modifier = Modifier,
     candidates: List<CandidateEntity>,
-    onCandidateClick: (String) -> Unit,
+    onCandidateClick: (String) -> Unit
 ) {
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier
     ) {
-        items(items = candidates, key = {it.id}) { candidate ->
+        items(items = candidates, key = { it.id }) { candidate ->
             CandidateItem(candidate = candidate, onCandidateClick = onCandidateClick)
         }
     }
@@ -224,7 +223,7 @@ fun CandidatesList(
 fun CandidateItem(
     modifier: Modifier = Modifier,
     candidate: CandidateEntity,
-    onCandidateClick: (String) -> Unit,
+    onCandidateClick: (String) -> Unit
 ) {
     Row(
         modifier = modifier
@@ -240,7 +239,9 @@ fun CandidateItem(
             if (candidate.photo == null) {
                 Image(
                     painter = painterResource(com.example.core.R.drawable.ic_empty_image_24dp),
-                    contentDescription = stringResource(com.example.core.R.string.content_description_empty_image),
+                    contentDescription = stringResource(
+                        com.example.core.R.string.content_description_empty_image
+                    ),
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.LightGray),
@@ -249,7 +250,9 @@ fun CandidateItem(
             } else {
                 AsyncImage(
                     model = candidate.photo,
-                    contentDescription = stringResource(com.example.core.R.string.content_description_photo),
+                    contentDescription = stringResource(
+                        com.example.core.R.string.content_description_photo
+                    ),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
                 )

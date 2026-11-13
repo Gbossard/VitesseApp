@@ -15,6 +15,9 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.just
 import io.mockk.mockk
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.time.LocalDate
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -24,9 +27,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.io.FileNotFoundException
-import java.io.IOException
-import java.time.LocalDate
 
 class EditCandidateViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -41,7 +41,7 @@ class EditCandidateViewModelTest {
 
     @MockK
     lateinit var photoStorage: PhotoStorage
-    private lateinit var  savedStateHandle: SavedStateHandle
+    private lateinit var savedStateHandle: SavedStateHandle
 
     private lateinit var viewModel: EditCandidateViewModel
 
@@ -103,7 +103,7 @@ class EditCandidateViewModelTest {
             val loadedState = awaitItem()
             assertTrue(loadedState.isEditingMode)
             assertEquals("Fake first Name", loadedState.firstName.text.toString())
-            assertEquals("Fake last Name",loadedState.lastName.text.toString())
+            assertEquals("Fake last Name", loadedState.lastName.text.toString())
             assertEquals("0606060606", loadedState.phone.text.toString())
             assertEquals("fake@gmail.com", loadedState.email.text.toString())
             assertEquals(LocalDate.of(2026, 1, 6), loadedState.dateOfBirth)
@@ -259,8 +259,8 @@ class EditCandidateViewModelTest {
 
     @Test
     fun onDateOfBirthChange_updatedDateOfBirth() {
-        viewModel.onDateOfBirthChange(LocalDate.of(2007,6,25))
-        assertEquals(LocalDate.of(2007,6,25), viewModel.editUiState.value.dateOfBirth)
+        viewModel.onDateOfBirthChange(LocalDate.of(2007, 6, 25))
+        assertEquals(LocalDate.of(2007, 6, 25), viewModel.editUiState.value.dateOfBirth)
     }
 
     @Test
@@ -293,7 +293,7 @@ class EditCandidateViewModelTest {
         val lastName = "Fake LastName"
         val phone = "0606060606"
         val email = "fake@email"
-        val dateOfBirth = LocalDate.of(2026,9,10)
+        val dateOfBirth = LocalDate.of(2026, 9, 10)
         val result = viewModel.formIsValid(firstName, lastName, phone, email, dateOfBirth)
 
         assertFalse(result)
@@ -306,7 +306,7 @@ class EditCandidateViewModelTest {
         val lastName = "Fake LastName"
         val phone = "0606060606"
         val email = "fake@email.com"
-        val dateOfBirth = LocalDate.of(2026,9,10)
+        val dateOfBirth = LocalDate.of(2026, 9, 10)
         val result = viewModel.formIsValid(firstName, lastName, phone, email, dateOfBirth)
 
         assertTrue(result)

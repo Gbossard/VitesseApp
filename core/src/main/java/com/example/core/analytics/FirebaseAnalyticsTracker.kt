@@ -10,7 +10,7 @@ interface AnalyticsTracker {
     fun trackScreen(screenName: String)
 }
 
-class FirebaseAnalyticsTracker @Inject constructor(): AnalyticsTracker {
+class FirebaseAnalyticsTracker @Inject constructor() : AnalyticsTracker {
     override fun trackScreen(screenName: String) {
         Firebase.analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW) {
             param(FirebaseAnalytics.Param.SCREEN_NAME, screenName)

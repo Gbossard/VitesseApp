@@ -29,11 +29,7 @@ import com.example.core.R
 import com.example.core.ui.theme.VitesseAppTheme
 
 @Composable
-fun PhotoContent(
-    modifier: Modifier = Modifier,
-    photo: Any?,
-    onClick: (() -> Unit)? = null
-) {
+fun PhotoContent(modifier: Modifier = Modifier, photo: Any?, onClick: (() -> Unit)? = null) {
     val isClickable = onClick != null
 
     Box(
@@ -96,10 +92,7 @@ fun PhotoContent(
 }
 
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
-private fun Modifier.clickableIf(
-    onClick: (() -> Unit)?,
-    enabled: Boolean
-): Modifier = if (enabled && onClick != null) {
+private fun Modifier.clickableIf(onClick: (() -> Unit)?, enabled: Boolean): Modifier = if (enabled && onClick != null) {
     this.clickable(
         onClick = onClick
     )

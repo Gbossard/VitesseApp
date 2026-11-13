@@ -9,17 +9,13 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-fun isEmbeddedPhotoPickerSupported(): Boolean {
-    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
-        SdkExtensions.getExtensionVersion(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) >= 15
-}
+fun isEmbeddedPhotoPickerSupported(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
+    SdkExtensions.getExtensionVersion(Build.VERSION_CODES.UPSIDE_DOWN_CAKE) >= 15
 
-fun Long.toLocalDate(): LocalDate {
-    return LocalDateTime.ofInstant(
-        Instant.ofEpochMilli(this),
-        ZoneId.systemDefault()
-    ).toLocalDate()
-}
+fun Long.toLocalDate(): LocalDate = LocalDateTime.ofInstant(
+    Instant.ofEpochMilli(this),
+    ZoneId.systemDefault()
+).toLocalDate()
 
 fun FieldError.toErrorMessageRes(): Int = when (this) {
     FieldError.EmptyField -> R.string.form_mandatory_field

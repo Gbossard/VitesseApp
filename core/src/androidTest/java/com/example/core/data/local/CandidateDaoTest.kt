@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room3.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.test.core.app.ApplicationProvider
+import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -13,13 +14,13 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.time.LocalDate
 
 class CandidateDaoTest {
 
     private lateinit var candidateDao: CandidateDao
     private lateinit var db: CandidateDatabase
     private lateinit var result: Flow<List<CandidateEntity>>
+
     @Before
     fun createDb() {
         val context = ApplicationProvider.getApplicationContext<Context>()

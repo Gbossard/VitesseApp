@@ -11,6 +11,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit4.MockKRule
 import io.mockk.just
 import io.mockk.runs
+import java.time.LocalDate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
@@ -19,11 +20,11 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.time.LocalDate
 
 class CandidateRepositoryImplTest {
     @get:Rule
     val mockkRule = MockKRule(this)
+
     @MockK
     lateinit var candidateDao: CandidateDao
 
@@ -178,7 +179,7 @@ class CandidateRepositoryImplTest {
         coEvery { candidateDao.deleteCandidate(candidate) } just runs
 
         candidateRepositoryImpl.deleteCandidate(candidate)
-        coVerify(exactly = 1) { candidateDao.deleteCandidate(candidate)}
+        coVerify(exactly = 1) { candidateDao.deleteCandidate(candidate) }
     }
 
     // convertSalaryToGbp

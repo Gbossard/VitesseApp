@@ -13,15 +13,14 @@ abstract class CandidateDatabase : RoomDatabase() {
     abstract fun candidateDao(): CandidateDao
     companion object {
         @Volatile
+        @Suppress("ktlint:standard:property-naming")
         private var Instance: CandidateDatabase? = null
 
-        fun getDatabase(context: Context): CandidateDatabase {
-            return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, CandidateDatabase::class.java, "candidate_database")
-                    .fallbackToDestructiveMigration(true)
-                    .build()
-                    .also { Instance = it }
-            }
+        fun getDatabase(context: Context): CandidateDatabase = Instance ?: synchronized(this) {
+            Room.databaseBuilder(context, CandidateDatabase::class.java, "candidate_database")
+                .fallbackToDestructiveMigration(true)
+                .build()
+                .also { Instance = it }
         }
     }
 }
