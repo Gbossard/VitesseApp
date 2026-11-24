@@ -22,7 +22,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -55,8 +54,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.example.core.data.local.CandidateEntity
 import com.example.core.ui.composable.ErrorContent
@@ -66,19 +63,18 @@ import com.example.feature.home.R
 import java.time.LocalDate
 
 @Composable
-fun HomeScreen(
+internal fun HomeScreen(
+    searchQuery: String,
+    candidatesUiState: HomeUiState,
+    favoritesUiState: HomeUiState,
+    onQueryChange: (String) -> Unit,
     onFabClick: () -> Unit,
-    onCandidateClick: (String) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel()
+    onCandidateClick: (String) -> Unit
 ) {
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val candidatesUiState by viewModel.candidatesUiState.collectAsStateWithLifecycle()
-    val favoritesUiState by viewModel.favoritesUiState.collectAsStateWithLifecycle()
-
     Scaffold(
         topBar = {
             HomeSearch(
-                onQueryChange = viewModel::onQueryChange,
+                onQueryChange = onQueryChange,
                 query = searchQuery
             )
         },
@@ -103,9 +99,8 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeSearch(modifier: Modifier = Modifier, query: String, onQueryChange: (String) -> Unit) {
+internal fun HomeSearch(modifier: Modifier = Modifier, query: String, onQueryChange: (String) -> Unit) {
     val textFieldState = rememberTextFieldState(initialText = query)
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -158,7 +153,7 @@ fun HomeSearch(modifier: Modifier = Modifier, query: String, onQueryChange: (Str
 }
 
 @Composable
-fun HomeTabs(
+internal fun HomeTabs(
     modifier: Modifier = Modifier,
     candidatesUiState: HomeUiState,
     favoritesUiState: HomeUiState,
@@ -189,14 +184,17 @@ fun HomeTabs(
             is HomeUiState.Empty -> {
                 EmptyContent()
             }
+
             is HomeUiState.Error -> {
                 ErrorContent(
                     message = R.string.error_content_load_candidates
                 )
             }
+
             is HomeUiState.Success -> {
                 CandidatesList(candidates = uiState.candidates, onCandidateClick = onCandidateClick)
             }
+
             is HomeUiState.Loading -> {
                 LoadingContent()
             }
@@ -205,7 +203,7 @@ fun HomeTabs(
 }
 
 @Composable
-fun CandidatesList(
+internal fun CandidatesList(
     modifier: Modifier = Modifier,
     candidates: List<CandidateEntity>,
     onCandidateClick: (String) -> Unit
@@ -220,7 +218,7 @@ fun CandidatesList(
 }
 
 @Composable
-fun CandidateItem(
+internal fun CandidateItem(
     modifier: Modifier = Modifier,
     candidate: CandidateEntity,
     onCandidateClick: (String) -> Unit
@@ -233,7 +231,9 @@ fun CandidateItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
-            modifier = Modifier.size(60.dp).clip(RoundedCornerShape(12.dp)),
+            modifier = Modifier
+                .size(60.dp)
+                .clip(RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center
         ) {
             if (candidate.photo == null) {
@@ -277,7 +277,7 @@ fun CandidateItem(
 }
 
 @Composable
-fun EmptyContent(modifier: Modifier = Modifier) {
+internal fun EmptyContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -294,7 +294,7 @@ fun EmptyContent(modifier: Modifier = Modifier) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
-fun CandidateItemPreview() {
+private fun CandidateItemPreview() {
     VitesseAppTheme {
         CandidateItem(
             candidate = CandidateEntity(
