@@ -1,7 +1,6 @@
 package com.example.feature.edit_page.ui.screens
 
 import android.net.Uri
-import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
@@ -41,15 +40,13 @@ class EditCandidateViewModelTest {
 
     @MockK
     lateinit var photoStorage: PhotoStorage
-    private lateinit var savedStateHandle: SavedStateHandle
 
     private lateinit var viewModel: EditCandidateViewModel
 
     @Before
     fun setUp() {
-        savedStateHandle = SavedStateHandle()
         viewModel = EditCandidateViewModel(
-            savedStateHandle = savedStateHandle,
+            candidateId = null,
             candidateRepository = repository,
             photoStorage = photoStorage
         )
@@ -88,9 +85,8 @@ class EditCandidateViewModelTest {
         )
         coEvery { repository.getCandidateById(candidateId) } returns candidate
 
-        val editSavedState = SavedStateHandle(mapOf("candidateId" to candidateId))
         val editViewModel = EditCandidateViewModel(
-            savedStateHandle = editSavedState,
+            candidateId = candidateId,
             candidateRepository = repository,
             photoStorage = photoStorage
         )

@@ -4,18 +4,19 @@ import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.core.net.toUri
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.storage.PhotoStorage
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.time.LocalDate
 import java.util.UUID
-import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -60,13 +61,18 @@ sealed interface FieldError {
     data object InvalidField : FieldError
 }
 
-@HiltViewModel
-class EditCandidateViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = EditCandidateViewModel.Factory::class)
+class EditCandidateViewModel @AssistedInject constructor(
+    @Assisted val candidateId: String?,
     private val candidateRepository: CandidateRepository,
     private val photoStorage: PhotoStorage
 ) : ViewModel() {
-    private val candidateId: String? = savedStateHandle.get<String>("candidateId")
+
+    @AssistedFactory
+    interface Factory {
+        fun create(candidateId: String?): EditCandidateViewModel
+    }
+
     private val _editUiState = MutableStateFlow(EditUiState())
     val editUiState: StateFlow<EditUiState> = _editUiState.asStateFlow()
 

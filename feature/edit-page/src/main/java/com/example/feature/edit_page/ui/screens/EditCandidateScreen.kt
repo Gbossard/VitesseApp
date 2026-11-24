@@ -52,16 +52,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.photopicker.compose.ExperimentalPhotoPickerComposeApi
 import com.example.core.ui.composable.PhotoContent
 import com.example.core.ui.theme.VitesseAppTheme
 import com.example.feature.edit_page.R
@@ -74,35 +70,14 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("LocalContextResourcesRead")
 @Composable
-fun EditCandidateScreen(
-    viewModel: EditCandidateViewModel = hiltViewModel(),
+internal fun EditCandidateScreen(
+    editUiState: EditUiState,
     onBackClick: () -> Unit,
-    onSaveClick: () -> Unit
+    onSaveSubmit: () -> Unit,
+    onDateOfBirthChange: (LocalDate?) -> Unit,
+    onPhotoChange: (Uri?) -> Unit,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
-    val editUiState by viewModel.editUiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        viewModel.events.collect { event ->
-            when (event) {
-                is EditUiEvent.SaveSuccess -> {
-                    onSaveClick()
-                }
-                is EditUiEvent.SaveErrorEvent -> {
-                    val resourcesId = when (event.error) {
-                        is SaveError.DatabaseError -> R.string.form_error_save_database
-                        is SaveError.FileNotFound -> R.string.form_error_save_file_not_found
-                        is SaveError.StorageFull -> R.string.form_error_save_storage_full
-                        is SaveError.Unknown -> R.string.form_error_save_unknown
-                    }
-                    snackbarHostState.showSnackbar(
-                        message = context.resources.getString(resourcesId)
-                    )
-                }
-            }
-        }
-    }
     Scaffold(
         topBar = {
             AppBar(onBackClick = onBackClick, isEditing = editUiState.isEditingMode)
@@ -114,9 +89,7 @@ fun EditCandidateScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                onClick = {
-                    viewModel.saveCandidate()
-                }
+                onClick = onSaveSubmit
             ) {
                 Text(
                     text = stringResource(R.string.form_save)
@@ -131,7 +104,7 @@ fun EditCandidateScreen(
         ) {
             PhotoSection(
                 photoUri = editUiState.photo,
-                onPhotoChange = viewModel::onPhotoChange
+                onPhotoChange = onPhotoChange
             )
             NameSection(
                 firstName = editUiState.firstName,
@@ -159,7 +132,7 @@ fun EditCandidateScreen(
                 dateOfBirth = editUiState.dateOfBirth,
                 dateOfBirthError = editUiState.dateOfBirthError,
                 onDateOfBirthChange = { millis ->
-                    viewModel.onDateOfBirthChange(millis?.toLocalDate())
+                    onDateOfBirthChange(millis?.toLocalDate())
                 }
             )
             InformationSection(
@@ -182,9 +155,9 @@ fun EditCandidateScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPhotoPickerComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PhotoSection(photoUri: Uri?, onPhotoChange: (Uri?) -> Unit) {
+internal fun PhotoSection(photoUri: Uri?, onPhotoChange: (Uri?) -> Unit) {
     var attachments by rememberSaveable { mutableStateOf(listOfNotNull(photoUri)) }
 
     LaunchedEffect(photoUri) {
@@ -237,7 +210,7 @@ fun PhotoSection(photoUri: Uri?, onPhotoChange: (Uri?) -> Unit) {
 }
 
 @Composable
-fun NameSection(
+internal fun NameSection(
     modifier: Modifier = Modifier,
     firstName: TextFieldState,
     firstNameError: FieldError?,
@@ -284,7 +257,7 @@ fun NameSection(
 }
 
 @Composable
-fun InformationSection(
+internal fun InformationSection(
     modifier: Modifier = Modifier,
     painterRes: Int,
     painterDescription: Int,
@@ -322,7 +295,7 @@ fun InformationSection(
 
 @SuppressLint("NewApi")
 @Composable
-fun DateSection(
+internal fun DateSection(
     modifier: Modifier = Modifier,
     dateOfBirth: LocalDate?,
     dateOfBirthError: FieldError?,
@@ -374,7 +347,7 @@ fun DateSection(
 }
 
 @Composable
-fun Error(
+internal fun Error(
     modifier: Modifier = Modifier,
     error: FieldError?,
     color: Color = Color.Unspecified,
@@ -391,7 +364,7 @@ fun Error(
 }
 
 @Composable
-fun AppBar(modifier: Modifier = Modifier, onBackClick: () -> Unit, isEditing: Boolean) {
+internal fun AppBar(modifier: Modifier = Modifier, onBackClick: () -> Unit, isEditing: Boolean) {
     TopAppBar(
         modifier = modifier,
         title = {
@@ -433,9 +406,9 @@ private fun AppBarPreview() {
 @Composable
 private fun EditCandidateScreenPreview() {
     VitesseAppTheme {
-        EditCandidateScreen(
+        AppBar(
             onBackClick = {},
-            onSaveClick = {}
+            isEditing = false
         )
     }
 }
