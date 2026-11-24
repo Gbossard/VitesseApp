@@ -1,6 +1,5 @@
 package com.example.feature.details.ui.screens
 
-import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
@@ -54,9 +53,8 @@ class DetailsCandidateViewModelTest {
     )
 
     private fun createViewModel(): DetailsCandidateViewModel {
-        val savedStateHandle = SavedStateHandle(mapOf("candidateId" to candidateId))
         return DetailsCandidateViewModel(
-            savedStateHandle = savedStateHandle,
+            candidateId = candidateId,
             candidateRepository = repository,
             photoStorage = photoStorage
         )
