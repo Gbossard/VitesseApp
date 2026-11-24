@@ -23,7 +23,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -37,8 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.core.R
 import com.example.core.data.local.CandidateEntity
 import com.example.core.ui.composable.ErrorContent
@@ -56,25 +53,25 @@ import java.time.format.FormatStyle
 import kotlinx.coroutines.launch
 
 @Composable
-fun DetailsCandidateScreen(
-    viewModel: DetailsCandidateViewModel = hiltViewModel(),
+internal fun DetailsCandidateScreen(
+    uiState: DetailsCandidateUiState,
     onBackClick: () -> Unit,
-    onEditClick: (String) -> Unit
+    onEditClick: (String) -> Unit,
+    onToggleFavorite: () -> Unit,
+    onDeleteCandidate: (CandidateEntity) -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val openDialog = rememberSaveable { mutableStateOf(false) }
-    val state = uiState
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
-            if (state is DetailsCandidateUiState.Success) {
-                val candidate = state.candidate
+            if (uiState is DetailsCandidateUiState.Success) {
+                val candidate = uiState.candidate
                 AppBar(
                     onBackClick = onBackClick,
-                    onFavoriteClick = { viewModel.toggleFavorite() },
+                    onFavoriteClick = onToggleFavorite,
                     onEditClick = { onEditClick(candidate.id) },
                     onDeleteClick = { openDialog.value = !openDialog.value },
                     firstName = candidate.firstName,
@@ -85,7 +82,7 @@ fun DetailsCandidateScreen(
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
-        when (state) {
+        when (uiState) {
             is DetailsCandidateUiState.Error -> {
                 ErrorContent(
                     message = com.example.feature.details.R.string.error_content_load_candidate
@@ -94,12 +91,12 @@ fun DetailsCandidateScreen(
             is DetailsCandidateUiState.Success -> {
                 DetailsContent(
                     modifier = Modifier.padding(innerPadding),
-                    candidate = state.candidate,
+                    candidate = uiState.candidate,
                     onErrorContact = { message ->
                         scope.launch { snackbarHostState.showSnackbar(message) }
                     },
-                    salaryInGbp = state.salaryInGbp,
-                    salaryError = state.salaryError
+                    salaryInGbp = uiState.salaryInGbp,
+                    salaryError = uiState.salaryError
                 )
             }
 
@@ -108,13 +105,13 @@ fun DetailsCandidateScreen(
             }
         }
 
-        if (openDialog.value && state is DetailsCandidateUiState.Success) {
+        if (openDialog.value && uiState is DetailsCandidateUiState.Success) {
             DeleteDialog(
                 onDismissRequest = {
                     openDialog.value = false
                 },
                 onConfirmation = {
-                    viewModel.deleteCandidate(state.candidate)
+                    onDeleteCandidate(uiState.candidate)
                     onBackClick()
                 }
             )
@@ -123,7 +120,7 @@ fun DetailsCandidateScreen(
 }
 
 @Composable
-fun DetailsContent(
+internal fun DetailsContent(
     modifier: Modifier = Modifier,
     candidate: CandidateEntity,
     onErrorContact: (String) -> Unit,
@@ -152,7 +149,7 @@ fun DetailsContent(
 }
 
 @Composable
-fun ContactContent(
+internal fun ContactContent(
     modifier: Modifier = Modifier,
     phone: String,
     email: String,
@@ -185,7 +182,7 @@ fun ContactContent(
 }
 
 @Composable
-fun ContactItem(modifier: Modifier = Modifier, iconRes: Int, textRes: Int, onClick: () -> Unit) {
+internal fun ContactItem(modifier: Modifier = Modifier, iconRes: Int, textRes: Int, onClick: () -> Unit) {
     Column(
         modifier = modifier.padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -208,7 +205,7 @@ fun ContactItem(modifier: Modifier = Modifier, iconRes: Int, textRes: Int, onCli
 }
 
 @Composable
-fun InformationContent(
+internal fun InformationContent(
     modifier: Modifier = Modifier,
     dateOfBirth: LocalDate,
     notes: String,
@@ -256,14 +253,16 @@ fun InformationContent(
 }
 
 @Composable
-fun CardContent(
+internal fun CardContent(
     modifier: Modifier = Modifier,
     title: String,
     subhead: String? = null,
     body: String? = null
 ) {
     Card(
-        modifier = modifier.fillMaxWidth().padding(bottom = 16.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
         colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         Text(
@@ -289,7 +288,7 @@ fun CardContent(
 }
 
 @Composable
-fun AppBar(
+internal fun AppBar(
     modifier: Modifier = Modifier,
     onBackClick: () -> Unit,
     onFavoriteClick: () -> Unit,
@@ -351,7 +350,7 @@ fun AppBar(
 }
 
 @Composable
-fun DeleteDialog(
+internal fun DeleteDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit

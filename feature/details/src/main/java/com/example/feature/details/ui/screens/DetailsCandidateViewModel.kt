@@ -1,14 +1,15 @@
 package com.example.feature.details.ui.screens
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.data.local.CandidateEntity
 import com.example.core.data.repository.CandidateRepository
 import com.example.core.data.storage.PhotoStorage
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.IOException
-import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -36,13 +37,17 @@ sealed interface DetailsCandidateUiState {
     data object Loading : DetailsCandidateUiState
 }
 
-@HiltViewModel
-class DetailsCandidateViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = DetailsCandidateViewModel.Factory::class)
+class DetailsCandidateViewModel @AssistedInject constructor(
+    @Assisted val candidateId: String,
     private val candidateRepository: CandidateRepository,
     private val photoStorage: PhotoStorage
 ) : ViewModel() {
-    private val candidateId: String = checkNotNull(savedStateHandle.get<String>("candidateId"))
+
+    @AssistedFactory
+    interface Factory {
+        fun create(candidateId: String): DetailsCandidateViewModel
+    }
 
     private val candidateFlow = candidateRepository.getCandidateByIdFlow(candidateId)
 
